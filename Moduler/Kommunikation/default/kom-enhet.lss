@@ -1,0 +1,969 @@
+
+kom-enhet.elf:     file format elf32-avr
+
+Sections:
+Idx Name          Size      VMA       LMA       File off  Algn
+  0 .text         000004c2  00000000  00000000  00000094  2**1
+                  CONTENTS, ALLOC, LOAD, READONLY, CODE
+  1 .data         00000002  00800060  000004c2  00000556  2**0
+                  CONTENTS, ALLOC, LOAD, DATA
+  2 .bss          0000005a  00800062  00800062  00000558  2**0
+                  ALLOC
+  3 .debug_aranges 00000080  00000000  00000000  00000558  2**0
+                  CONTENTS, READONLY, DEBUGGING
+  4 .debug_pubnames 000004ad  00000000  00000000  000005d8  2**0
+                  CONTENTS, READONLY, DEBUGGING
+  5 .debug_info   0000089f  00000000  00000000  00000a85  2**0
+                  CONTENTS, READONLY, DEBUGGING
+  6 .debug_abbrev 0000030b  00000000  00000000  00001324  2**0
+                  CONTENTS, READONLY, DEBUGGING
+  7 .debug_line   0000067d  00000000  00000000  0000162f  2**0
+                  CONTENTS, READONLY, DEBUGGING
+  8 .debug_frame  00000110  00000000  00000000  00001cac  2**2
+                  CONTENTS, READONLY, DEBUGGING
+  9 .debug_str    00000282  00000000  00000000  00001dbc  2**0
+                  CONTENTS, READONLY, DEBUGGING
+ 10 .debug_loc    00000208  00000000  00000000  0000203e  2**0
+                  CONTENTS, READONLY, DEBUGGING
+
+Disassembly of section .text:
+
+00000000 <__vectors>:
+   0:	0c 94 2a 00 	jmp	0x54	; 0x54 <__ctors_end>
+   4:	0c 94 47 00 	jmp	0x8e	; 0x8e <__bad_interrupt>
+   8:	0c 94 47 00 	jmp	0x8e	; 0x8e <__bad_interrupt>
+   c:	0c 94 47 00 	jmp	0x8e	; 0x8e <__bad_interrupt>
+  10:	0c 94 47 00 	jmp	0x8e	; 0x8e <__bad_interrupt>
+  14:	0c 94 47 00 	jmp	0x8e	; 0x8e <__bad_interrupt>
+  18:	0c 94 47 00 	jmp	0x8e	; 0x8e <__bad_interrupt>
+  1c:	0c 94 47 00 	jmp	0x8e	; 0x8e <__bad_interrupt>
+  20:	0c 94 47 00 	jmp	0x8e	; 0x8e <__bad_interrupt>
+  24:	0c 94 d6 01 	jmp	0x3ac	; 0x3ac <__vector_9>
+  28:	0c 94 47 00 	jmp	0x8e	; 0x8e <__bad_interrupt>
+  2c:	0c 94 2f 01 	jmp	0x25e	; 0x25e <__vector_11>
+  30:	0c 94 47 00 	jmp	0x8e	; 0x8e <__bad_interrupt>
+  34:	0c 94 01 01 	jmp	0x202	; 0x202 <__vector_13>
+  38:	0c 94 47 00 	jmp	0x8e	; 0x8e <__bad_interrupt>
+  3c:	0c 94 47 00 	jmp	0x8e	; 0x8e <__bad_interrupt>
+  40:	0c 94 47 00 	jmp	0x8e	; 0x8e <__bad_interrupt>
+  44:	0c 94 47 00 	jmp	0x8e	; 0x8e <__bad_interrupt>
+  48:	0c 94 47 00 	jmp	0x8e	; 0x8e <__bad_interrupt>
+  4c:	0c 94 47 00 	jmp	0x8e	; 0x8e <__bad_interrupt>
+  50:	0c 94 47 00 	jmp	0x8e	; 0x8e <__bad_interrupt>
+
+00000054 <__ctors_end>:
+  54:	11 24       	eor	r1, r1
+  56:	1f be       	out	0x3f, r1	; 63
+  58:	cf e5       	ldi	r28, 0x5F	; 95
+  5a:	d4 e0       	ldi	r29, 0x04	; 4
+  5c:	de bf       	out	0x3e, r29	; 62
+  5e:	cd bf       	out	0x3d, r28	; 61
+
+00000060 <__do_copy_data>:
+  60:	10 e0       	ldi	r17, 0x00	; 0
+  62:	a0 e6       	ldi	r26, 0x60	; 96
+  64:	b0 e0       	ldi	r27, 0x00	; 0
+  66:	e2 ec       	ldi	r30, 0xC2	; 194
+  68:	f4 e0       	ldi	r31, 0x04	; 4
+  6a:	02 c0       	rjmp	.+4      	; 0x70 <.do_copy_data_start>
+
+0000006c <.do_copy_data_loop>:
+  6c:	05 90       	lpm	r0, Z+
+  6e:	0d 92       	st	X+, r0
+
+00000070 <.do_copy_data_start>:
+  70:	a2 36       	cpi	r26, 0x62	; 98
+  72:	b1 07       	cpc	r27, r17
+  74:	d9 f7       	brne	.-10     	; 0x6c <.do_copy_data_loop>
+
+00000076 <__do_clear_bss>:
+  76:	10 e0       	ldi	r17, 0x00	; 0
+  78:	a2 e6       	ldi	r26, 0x62	; 98
+  7a:	b0 e0       	ldi	r27, 0x00	; 0
+  7c:	01 c0       	rjmp	.+2      	; 0x80 <.do_clear_bss_start>
+
+0000007e <.do_clear_bss_loop>:
+  7e:	1d 92       	st	X+, r1
+
+00000080 <.do_clear_bss_start>:
+  80:	ac 3b       	cpi	r26, 0xBC	; 188
+  82:	b1 07       	cpc	r27, r17
+  84:	e1 f7       	brne	.-8      	; 0x7e <.do_clear_bss_loop>
+  86:	0e 94 c7 01 	call	0x38e	; 0x38e <main>
+  8a:	0c 94 5f 02 	jmp	0x4be	; 0x4be <_exit>
+
+0000008e <__bad_interrupt>:
+  8e:	0c 94 00 00 	jmp	0	; 0x0 <__vectors>
+
+00000092 <twi_init>:
+unsigned char data[] = {0};
+
+void twi_init()
+{
+	
+	TWBR |= 0x41; //Set bitrate
+  92:	80 b1       	in	r24, 0x00	; 0
+  94:	81 64       	ori	r24, 0x41	; 65
+  96:	80 b9       	out	0x00, r24	; 0
+}
+  98:	08 95       	ret
+
+0000009a <i2c_transmit>:
+
+unsigned char i2c_transmit(unsigned char type) {
+  switch(type) {
+  9a:	81 30       	cpi	r24, 0x01	; 1
+  9c:	39 f0       	breq	.+14     	; 0xac <i2c_transmit+0x12>
+  9e:	81 30       	cpi	r24, 0x01	; 1
+  a0:	18 f0       	brcs	.+6      	; 0xa8 <i2c_transmit+0xe>
+  a2:	82 30       	cpi	r24, 0x02	; 2
+  a4:	51 f4       	brne	.+20     	; 0xba <i2c_transmit+0x20>
+  a6:	05 c0       	rjmp	.+10     	; 0xb2 <i2c_transmit+0x18>
+     case I2C_START:    // Send Start Condition
+       TWCR = (1 << TWINT) | (1 << TWSTA) | (1 << TWEN)|(1 << TWEA);
+  a8:	84 ee       	ldi	r24, 0xE4	; 228
+  aa:	01 c0       	rjmp	.+2      	; 0xae <i2c_transmit+0x14>
+       break;
+     case I2C_DATA:     // Send Data
+       TWCR = (1 << TWINT) | (1 << TWEN)|(1 << TWEA);
+  ac:	84 ec       	ldi	r24, 0xC4	; 196
+  ae:	86 bf       	out	0x36, r24	; 54
+  b0:	04 c0       	rjmp	.+8      	; 0xba <i2c_transmit+0x20>
+       break;
+     case I2C_STOP:     // Send Stop Condition
+       TWCR = (1 << TWINT) | (1 << TWEN) | (1 << TWSTO);
+  b2:	84 e9       	ldi	r24, 0x94	; 148
+  b4:	86 bf       	out	0x36, r24	; 54
+  b6:	80 e0       	ldi	r24, 0x00	; 0
+  b8:	08 95       	ret
+       return 0;
+  }  
+  
+  // Wait for TWINT flag set in TWCR Register
+  while (!(TWCR & (1 << TWINT)));  
+  ba:	06 b6       	in	r0, 0x36	; 54
+  bc:	07 fe       	sbrs	r0, 7
+  be:	fd cf       	rjmp	.-6      	; 0xba <i2c_transmit+0x20>
+  
+  // Return TWI Status Register, mask the prescaler bits (TWPS1,TWPS0)
+  return (TWSR & 0xF8);
+  c0:	81 b1       	in	r24, 0x01	; 1
+  c2:	88 7f       	andi	r24, 0xF8	; 248
+}
+  c4:	08 95       	ret
+
+000000c6 <i2c_writebyte>:
+
+int i2c_writebyte(unsigned char adress)
+{
+  c6:	0f 93       	push	r16
+  c8:	1f 93       	push	r17
+  ca:	cf 93       	push	r28
+  cc:	df 93       	push	r29
+	//Här anger vi någon av de två adresser som vi kommer att ha.
+	//Antingen Sensor eller Styr
+	//Här anges en adress. Kanske adress ett: 0b00000001. 
+	//Denna skiftas ett steg för att inte skriv biten 
+	//ska skriva över adressen
+	TWDR = (adress << 1) | TW_WRITE;  
+  ce:	08 2f       	mov	r16, r24
+  d0:	00 0f       	add	r16, r16
+  d2:	10 e0       	ldi	r17, 0x00	; 0
+  unsigned char twi_status;
+//Retur om allt skiter sig
+  char r_val = -1;
+  
+  i2c_retry:
+  	if (n++ >= MAX_TRIES) return r_val;  
+  d4:	1f 5f       	subi	r17, 0xFF	; 255
+  d6:	16 30       	cpi	r17, 0x06	; 6
+  d8:	19 f4       	brne	.+6      	; 0xe0 <i2c_writebyte+0x1a>
+  da:	2f ef       	ldi	r18, 0xFF	; 255
+  dc:	30 e0       	ldi	r19, 0x00	; 0
+  de:	2b c0       	rjmp	.+86     	; 0x136 <i2c_writebyte+0x70>
+  	
+	bytes = 0;
+  	// Transmit Start Condition
+ 	twi_status = i2c_transmit(I2C_START);
+  e0:	80 e0       	ldi	r24, 0x00	; 0
+  e2:	0e 94 4d 00 	call	0x9a	; 0x9a <i2c_transmit>
+ 
+	// Check the TWI Status
+	if (twi_status == TW_MT_ARB_LOST) goto i2c_retry;
+  e6:	88 33       	cpi	r24, 0x38	; 56
+  e8:	a9 f3       	breq	.-22     	; 0xd4 <i2c_writebyte+0xe>
+	if ((twi_status != TW_START) && (twi_status != TW_REP_START)) goto i2c_quit;  
+  ea:	88 30       	cpi	r24, 0x08	; 8
+  ec:	11 f0       	breq	.+4      	; 0xf2 <i2c_writebyte+0x2c>
+  ee:	80 31       	cpi	r24, 0x10	; 16
+  f0:	e1 f4       	brne	.+56     	; 0x12a <i2c_writebyte+0x64>
+	//Här anger vi någon av de två adresser som vi kommer att ha.
+	//Antingen Sensor eller Styr
+	//Här anges en adress. Kanske adress ett: 0b00000001. 
+	//Denna skiftas ett steg för att inte skriv biten 
+	//ska skriva över adressen
+	TWDR = (adress << 1) | TW_WRITE;  
+  f2:	03 b9       	out	0x03, r16	; 3
+
+	// Transmit I2C Data. Adressen skickas varpå ett statusmeddelande returneras
+	twi_status = i2c_transmit(I2C_DATA);  
+  f4:	81 e0       	ldi	r24, 0x01	; 1
+  f6:	0e 94 4d 00 	call	0x9a	; 0x9a <i2c_transmit>
+
+	// Check the TWSR status
+	if ((twi_status == TW_MT_SLA_NACK) || (twi_status == TW_MT_ARB_LOST)) goto i2c_retry;
+  fa:	80 32       	cpi	r24, 0x20	; 32
+  fc:	59 f3       	breq	.-42     	; 0xd4 <i2c_writebyte+0xe>
+  fe:	88 33       	cpi	r24, 0x38	; 56
+ 100:	49 f3       	breq	.-46     	; 0xd4 <i2c_writebyte+0xe>
+	if (twi_status != TW_MT_SLA_ACK) goto i2c_quit; 
+ 102:	88 31       	cpi	r24, 0x18	; 24
+ 104:	91 f4       	brne	.+36     	; 0x12a <i2c_writebyte+0x64>
+ 106:	c2 e6       	ldi	r28, 0x62	; 98
+ 108:	d0 e0       	ldi	r29, 0x00	; 0
+ 10a:	07 c0       	rjmp	.+14     	; 0x11a <i2c_writebyte+0x54>
+ 10c:	21 96       	adiw	r28, 0x01	; 1
+	
+	   
+
+  i2c_next_data_byte:
+  	
+	if(bytes < MAX_DATA_BYTES)
+ 10e:	80 e0       	ldi	r24, 0x00	; 0
+ 110:	c8 36       	cpi	r28, 0x68	; 104
+ 112:	d8 07       	cpc	r29, r24
+ 114:	11 f4       	brne	.+4      	; 0x11a <i2c_writebyte+0x54>
+ 116:	11 e0       	ldi	r17, 0x01	; 1
+ 118:	09 c0       	rjmp	.+18     	; 0x12c <i2c_writebyte+0x66>
+	{
+		// Put data into data register and start transmission
+		//Nu fylls registret med det man vill skicka
+		TWDR = data[bytes];  
+ 11a:	88 81       	ld	r24, Y
+ 11c:	83 b9       	out	0x03, r24	; 3
+//		TWCR |= (1<<TWEA);
+		// Transmit I2C Data
+		twi_status = i2c_transmit(I2C_DATA);  
+ 11e:	81 e0       	ldi	r24, 0x01	; 1
+ 120:	0e 94 4d 00 	call	0x9a	; 0x9a <i2c_transmit>
+		bytes += 1;
+
+		if (twi_status != TW_MT_DATA_ACK) goto i2c_retry;
+ 124:	88 32       	cpi	r24, 0x28	; 40
+ 126:	91 f3       	breq	.-28     	; 0x10c <i2c_writebyte+0x46>
+ 128:	d5 cf       	rjmp	.-86     	; 0xd4 <i2c_writebyte+0xe>
+	}
+	
+	// TWI Transmit Ok
+	r_val = 1;
+	
+  i2c_quit:
+ 12a:	1f ef       	ldi	r17, 0xFF	; 255
+  
+	// Transmit I2C Data
+	twi_status = i2c_transmit(I2C_STOP);
+ 12c:	82 e0       	ldi	r24, 0x02	; 2
+ 12e:	0e 94 4d 00 	call	0x9a	; 0x9a <i2c_transmit>
+  
+  return r_val;
+ 132:	21 2f       	mov	r18, r17
+ 134:	30 e0       	ldi	r19, 0x00	; 0
+}
+ 136:	c9 01       	movw	r24, r18
+ 138:	df 91       	pop	r29
+ 13a:	cf 91       	pop	r28
+ 13c:	1f 91       	pop	r17
+ 13e:	0f 91       	pop	r16
+ 140:	08 95       	ret
+
+00000142 <i2c_readbyte>:
+
+
+int i2c_readbyte(unsigned char adress)
+{
+ 142:	ff 92       	push	r15
+ 144:	0f 93       	push	r16
+ 146:	1f 93       	push	r17
+ 148:	cf 93       	push	r28
+ 14a:	df 93       	push	r29
+	// Check the TWSR status
+	if (twi_status == TW_MT_ARB_LOST) goto i2c_retry;
+	if ((twi_status != TW_START) && (twi_status != TW_REP_START)) goto i2c_quit;    
+  
+	// Send slave address (SLA_R)
+	TWDR = (adress << 1) | TW_READ;  
+ 14c:	f8 2e       	mov	r15, r24
+ 14e:	ff 0c       	add	r15, r15
+ 150:	81 e0       	ldi	r24, 0x01	; 1
+ 152:	f8 2a       	or	r15, r24
+ 154:	00 e0       	ldi	r16, 0x00	; 0
+  char r_val = -1;
+  
+
+  i2c_retry:
+
+	if (n++ >= MAX_TRIES) return r_val;  
+ 156:	0f 5f       	subi	r16, 0xFF	; 255
+ 158:	06 30       	cpi	r16, 0x06	; 6
+ 15a:	19 f4       	brne	.+6      	; 0x162 <i2c_readbyte+0x20>
+ 15c:	2f ef       	ldi	r18, 0xFF	; 255
+ 15e:	30 e0       	ldi	r19, 0x00	; 0
+ 160:	39 c0       	rjmp	.+114    	; 0x1d4 <i2c_readbyte+0x92>
+  	
+	bytes = 0;
+	// Transmit Start Condition
+	twi_status = i2c_transmit(I2C_START);
+ 162:	80 e0       	ldi	r24, 0x00	; 0
+ 164:	0e 94 4d 00 	call	0x9a	; 0x9a <i2c_transmit>
+
+	// Check the TWSR status
+	if (twi_status == TW_MT_ARB_LOST) goto i2c_retry;
+ 168:	88 33       	cpi	r24, 0x38	; 56
+ 16a:	a9 f3       	breq	.-22     	; 0x156 <i2c_readbyte+0x14>
+	if ((twi_status != TW_START) && (twi_status != TW_REP_START)) goto i2c_quit;    
+ 16c:	88 30       	cpi	r24, 0x08	; 8
+ 16e:	11 f0       	breq	.+4      	; 0x174 <i2c_readbyte+0x32>
+ 170:	80 31       	cpi	r24, 0x10	; 16
+ 172:	51 f5       	brne	.+84     	; 0x1c8 <i2c_readbyte+0x86>
+  
+	// Send slave address (SLA_R)
+	TWDR = (adress << 1) | TW_READ;  
+ 174:	f3 b8       	out	0x03, r15	; 3
+  
+	// Transmit I2C Data
+	twi_status = i2c_transmit(I2C_DATA);  
+ 176:	81 e0       	ldi	r24, 0x01	; 1
+ 178:	0e 94 4d 00 	call	0x9a	; 0x9a <i2c_transmit>
+
+	// Check the TWSR status
+	if ((twi_status == TW_MR_SLA_NACK) || (twi_status == TW_MR_ARB_LOST)) goto i2c_retry;
+ 17c:	88 34       	cpi	r24, 0x48	; 72
+ 17e:	59 f3       	breq	.-42     	; 0x156 <i2c_readbyte+0x14>
+ 180:	88 33       	cpi	r24, 0x38	; 56
+ 182:	49 f3       	breq	.-46     	; 0x156 <i2c_readbyte+0x14>
+	if (twi_status != TW_MR_SLA_ACK) goto i2c_quit;  
+ 184:	80 34       	cpi	r24, 0x40	; 64
+ 186:	01 f5       	brne	.+64     	; 0x1c8 <i2c_readbyte+0x86>
+ 188:	c0 e0       	ldi	r28, 0x00	; 0
+ 18a:	d0 e0       	ldi	r29, 0x00	; 0
+ 18c:	07 c0       	rjmp	.+14     	; 0x19c <i2c_readbyte+0x5a>
+ 18e:	ce 01       	movw	r24, r28
+ 190:	8f 5f       	subi	r24, 0xFF	; 255
+ 192:	18 2f       	mov	r17, r24
+ 194:	21 96       	adiw	r28, 0x01	; 1
+
+
+
+  i2c_next_data_byte:
+	if(bytes < MAX_DATA_BYTES - 1)
+ 196:	c5 30       	cpi	r28, 0x05	; 5
+ 198:	d1 05       	cpc	r29, r1
+ 19a:	59 f0       	breq	.+22     	; 0x1b2 <i2c_readbyte+0x70>
+		// Put data into data register and start transmission
+		//Nu fylls registret med det man vill skicka
+	
+	
+		// Transmit I2C Data
+		twi_status = i2c_transmit(I2C_DATA); 
+ 19c:	81 e0       	ldi	r24, 0x01	; 1
+ 19e:	0e 94 4d 00 	call	0x9a	; 0x9a <i2c_transmit>
+		
+		data[bytes] = TWDR;   
+ 1a2:	93 b1       	in	r25, 0x03	; 3
+ 1a4:	fe 01       	movw	r30, r28
+ 1a6:	ee 59       	subi	r30, 0x9E	; 158
+ 1a8:	ff 4f       	sbci	r31, 0xFF	; 255
+ 1aa:	90 83       	st	Z, r25
+		bytes += 1;
+
+		if (twi_status != TW_MR_DATA_ACK) goto i2c_retry;
+ 1ac:	80 35       	cpi	r24, 0x50	; 80
+ 1ae:	79 f3       	breq	.-34     	; 0x18e <i2c_readbyte+0x4c>
+ 1b0:	d2 cf       	rjmp	.-92     	; 0x156 <i2c_readbyte+0x14>
+		goto i2c_next_data_byte;
+	}
+	//Sista byten fås ingen ack
+	twi_status = i2c_transmit(I2C_DATA);
+ 1b2:	81 e0       	ldi	r24, 0x01	; 1
+ 1b4:	0e 94 4d 00 	call	0x9a	; 0x9a <i2c_transmit>
+	data[bytes] = TWDR; 
+ 1b8:	83 b1       	in	r24, 0x03	; 3
+ 1ba:	e1 2f       	mov	r30, r17
+ 1bc:	f0 e0       	ldi	r31, 0x00	; 0
+ 1be:	ee 59       	subi	r30, 0x9E	; 158
+ 1c0:	ff 4f       	sbci	r31, 0xFF	; 255
+ 1c2:	80 83       	st	Z, r24
+ 1c4:	11 e0       	ldi	r17, 0x01	; 1
+ 1c6:	01 c0       	rjmp	.+2      	; 0x1ca <i2c_readbyte+0x88>
+
+	r_val = 1;
+	  
+  i2c_quit:
+ 1c8:	1f ef       	ldi	r17, 0xFF	; 255
+  
+	// Send Stop Condition
+	twi_status = i2c_transmit(I2C_STOP);
+ 1ca:	82 e0       	ldi	r24, 0x02	; 2
+ 1cc:	0e 94 4d 00 	call	0x9a	; 0x9a <i2c_transmit>
+	return r_val;
+ 1d0:	21 2f       	mov	r18, r17
+ 1d2:	30 e0       	ldi	r19, 0x00	; 0
+}
+ 1d4:	c9 01       	movw	r24, r18
+ 1d6:	df 91       	pop	r29
+ 1d8:	cf 91       	pop	r28
+ 1da:	1f 91       	pop	r17
+ 1dc:	0f 91       	pop	r16
+ 1de:	ff 90       	pop	r15
+ 1e0:	08 95       	ret
+
+000001e2 <USART_Init>:
+
+
+void USART_Init ()
+{
+	//Set baud rate
+	UBRRL=MYUBRR;  //low byte
+ 1e2:	8f e0       	ldi	r24, 0x0F	; 15
+ 1e4:	89 b9       	out	0x09, r24	; 9
+	UBRRH=((MYUBRR)>>8); //high byte
+ 1e6:	10 bc       	out	0x20, r1	; 32
+	//Set data frame format: synchronous mode,no parity, 1 stop bit, 8 bit
+	UCSRC=(1<<URSEL)|(0<<UMSEL)|(0<<UPM1)|(0<<UPM0)|
+ 1e8:	86 e8       	ldi	r24, 0x86	; 134
+ 1ea:	80 bd       	out	0x20, r24	; 32
+		  (0<<USBS)|(0<<UCSZ2)|(1<<UCSZ1)|(1<<UCSZ0); 
+	//Enable Transmitter and Receiver and Interrupt on receive complete
+	UCSRB=(1<<RXEN)|(1<<TXEN)|(1<<RXCIE)|(1<<TXCIE);
+ 1ec:	88 ed       	ldi	r24, 0xD8	; 216
+ 1ee:	8a b9       	out	0x0a, r24	; 10
+	UCSRA=(1<<U2X); 
+ 1f0:	82 e0       	ldi	r24, 0x02	; 2
+ 1f2:	8b b9       	out	0x0b, r24	; 11
+	PORTD=(0<<PD5);
+ 1f4:	12 ba       	out	0x12, r1	; 18
+
+}
+ 1f6:	08 95       	ret
+
+000001f8 <GetDataType>:
+
+uint8_t GetDataType(uint8_t byte)
+{
+return (byte>>4);
+}
+ 1f8:	82 95       	swap	r24
+ 1fa:	8f 70       	andi	r24, 0x0F	; 15
+ 1fc:	08 95       	ret
+
+000001fe <GetNumberOfBytes>:
+uint8_t GetNumberOfBytes(uint8_t byte)
+{
+return (byte & 0b00001111);
+}
+ 1fe:	8f 70       	andi	r24, 0x0F	; 15
+ 200:	08 95       	ret
+
+00000202 <__vector_13>:
+
+ISR(USART_TXC_vect)
+{
+ 202:	1f 92       	push	r1
+ 204:	0f 92       	push	r0
+ 206:	0f b6       	in	r0, 0x3f	; 63
+ 208:	0f 92       	push	r0
+ 20a:	11 24       	eor	r1, r1
+	PORTD = (0<<PD5);
+ 20c:	12 ba       	out	0x12, r1	; 18
+}
+ 20e:	0f 90       	pop	r0
+ 210:	0f be       	out	0x3f, r0	; 63
+ 212:	0f 90       	pop	r0
+ 214:	1f 90       	pop	r1
+ 216:	18 95       	reti
+
+00000218 <USART_Transmit>:
+	
+}
+
+
+void USART_Transmit(uint8_t send_data[], uint8_t datatyp, uint8_t bytes)
+{
+ 218:	58 2f       	mov	r21, r24
+	// Wait for empty transmit buffer 
+	while ( !( UCSRA & (1<<UDRE)));
+ 21a:	5d 9b       	sbis	0x0b, 5	; 11
+ 21c:	fe cf       	rjmp	.-4      	; 0x21a <USART_Transmit+0x2>
+	PORTD=(1<<PD5);  // Robot ej redo att ta emot
+ 21e:	80 e2       	ldi	r24, 0x20	; 32
+ 220:	82 bb       	out	0x12, r24	; 18
+	UDR = start_datatyp ;
+ 222:	80 e9       	ldi	r24, 0x90	; 144
+ 224:	8c b9       	out	0x0c, r24	; 12
+
+	// Wait for empty transmit buffer 
+	while ( !( UCSRA & (1<<UDRE)));
+ 226:	5d 9b       	sbis	0x0b, 5	; 11
+ 228:	fe cf       	rjmp	.-4      	; 0x226 <USART_Transmit+0xe>
+	PORTD=(1<<PD5);  // Robot ej redo att ta emot
+ 22a:	80 e2       	ldi	r24, 0x20	; 32
+ 22c:	82 bb       	out	0x12, r24	; 18
+	UDR = datatyp + bytes;
+ 22e:	64 0f       	add	r22, r20
+ 230:	6c b9       	out	0x0c, r22	; 12
+ 232:	25 2f       	mov	r18, r21
+ 234:	39 2f       	mov	r19, r25
+ 236:	c9 01       	movw	r24, r18
+ 238:	fc 01       	movw	r30, r24
+ 23a:	90 e0       	ldi	r25, 0x00	; 0
+
+	uint8_t i;
+	for(i = 0; i < bytes; i++)
+	{
+		while ( !( UCSRA & (1<<UDRE)));
+		PORTD=(1<<PD5);  // Robot ej redo att ta emot
+ 23c:	20 e2       	ldi	r18, 0x20	; 32
+ 23e:	06 c0       	rjmp	.+12     	; 0x24c <USART_Transmit+0x34>
+	UDR = datatyp + bytes;
+
+	uint8_t i;
+	for(i = 0; i < bytes; i++)
+	{
+		while ( !( UCSRA & (1<<UDRE)));
+ 240:	5d 9b       	sbis	0x0b, 5	; 11
+ 242:	fe cf       	rjmp	.-4      	; 0x240 <USART_Transmit+0x28>
+		PORTD=(1<<PD5);  // Robot ej redo att ta emot
+ 244:	22 bb       	out	0x12, r18	; 18
+		UDR = send_data[i] ;
+ 246:	81 91       	ld	r24, Z+
+ 248:	8c b9       	out	0x0c, r24	; 12
+	while ( !( UCSRA & (1<<UDRE)));
+	PORTD=(1<<PD5);  // Robot ej redo att ta emot
+	UDR = datatyp + bytes;
+
+	uint8_t i;
+	for(i = 0; i < bytes; i++)
+ 24a:	9f 5f       	subi	r25, 0xFF	; 255
+ 24c:	94 17       	cp	r25, r20
+ 24e:	c0 f3       	brcs	.-16     	; 0x240 <USART_Transmit+0x28>
+		PORTD=(1<<PD5);  // Robot ej redo att ta emot
+		UDR = send_data[i] ;
+	}
+	
+	// Wait for empty transmit buffer 
+	while ( !( UCSRA & (1<<UDRE)));
+ 250:	5d 9b       	sbis	0x0b, 5	; 11
+ 252:	fe cf       	rjmp	.-4      	; 0x250 <USART_Transmit+0x38>
+	PORTD=(1<<PD5);  // Robot ej redo att ta emot
+ 254:	80 e2       	ldi	r24, 0x20	; 32
+ 256:	82 bb       	out	0x12, r24	; 18
+	UDR = slut_datatyp ;
+ 258:	80 e8       	ldi	r24, 0x80	; 128
+ 25a:	8c b9       	out	0x0c, r24	; 12
+
+}
+ 25c:	08 95       	ret
+
+0000025e <__vector_11>:
+}
+
+
+//receive interrupt 
+ISR(USART_RXC_vect)
+{
+ 25e:	1f 92       	push	r1
+ 260:	0f 92       	push	r0
+ 262:	0f b6       	in	r0, 0x3f	; 63
+ 264:	0f 92       	push	r0
+ 266:	11 24       	eor	r1, r1
+ 268:	2f 93       	push	r18
+ 26a:	3f 93       	push	r19
+ 26c:	4f 93       	push	r20
+ 26e:	5f 93       	push	r21
+ 270:	6f 93       	push	r22
+ 272:	7f 93       	push	r23
+ 274:	8f 93       	push	r24
+ 276:	9f 93       	push	r25
+ 278:	af 93       	push	r26
+ 27a:	bf 93       	push	r27
+ 27c:	ef 93       	push	r30
+ 27e:	ff 93       	push	r31
+//	if(PA0==0)
+//	{ // om PA0 = 0 , dvs manuell => gör som PC säger
+		byte = UDR;
+ 280:	2c b1       	in	r18, 0x0c	; 12
+ 282:	20 93 b0 00 	sts	0x00B0, r18
+		switch (steg)
+ 286:	80 91 6b 00 	lds	r24, 0x006B
+ 28a:	90 91 6c 00 	lds	r25, 0x006C
+ 28e:	81 30       	cpi	r24, 0x01	; 1
+ 290:	91 05       	cpc	r25, r1
+ 292:	99 f0       	breq	.+38     	; 0x2ba <__vector_11+0x5c>
+ 294:	82 30       	cpi	r24, 0x02	; 2
+ 296:	91 05       	cpc	r25, r1
+ 298:	1c f4       	brge	.+6      	; 0x2a0 <__vector_11+0x42>
+ 29a:	89 2b       	or	r24, r25
+ 29c:	41 f0       	breq	.+16     	; 0x2ae <__vector_11+0x50>
+ 29e:	62 c0       	rjmp	.+196    	; 0x364 <__vector_11+0x106>
+ 2a0:	82 30       	cpi	r24, 0x02	; 2
+ 2a2:	91 05       	cpc	r25, r1
+ 2a4:	21 f1       	breq	.+72     	; 0x2ee <__vector_11+0x90>
+ 2a6:	03 97       	sbiw	r24, 0x03	; 3
+ 2a8:	09 f0       	breq	.+2      	; 0x2ac <__vector_11+0x4e>
+ 2aa:	5c c0       	rjmp	.+184    	; 0x364 <__vector_11+0x106>
+ 2ac:	36 c0       	rjmp	.+108    	; 0x31a <__vector_11+0xbc>
+		{
+		case 0: // Leta efter start
+			{
+				if(byte == 122)
+ 2ae:	2a 37       	cpi	r18, 0x7A	; 122
+ 2b0:	09 f0       	breq	.+2      	; 0x2b4 <__vector_11+0x56>
+ 2b2:	5c c0       	rjmp	.+184    	; 0x36c <__vector_11+0x10e>
+				{
+					steg = 1;
+ 2b4:	81 e0       	ldi	r24, 0x01	; 1
+ 2b6:	90 e0       	ldi	r25, 0x00	; 0
+ 2b8:	15 c0       	rjmp	.+42     	; 0x2e4 <__vector_11+0x86>
+				}
+				break;
+			}
+		case 1: // Ta ut datatyp och antal bytes.
+			{
+				data_typ = GetDataType(byte);
+ 2ba:	82 2f       	mov	r24, r18
+ 2bc:	82 95       	swap	r24
+ 2be:	8f 70       	andi	r24, 0x0F	; 15
+ 2c0:	80 93 69 00 	sts	0x0069, r24
+				antal_bytes = GetNumberOfBytes(byte);
+ 2c4:	82 2f       	mov	r24, r18
+ 2c6:	8f 70       	andi	r24, 0x0F	; 15
+ 2c8:	80 93 6a 00 	sts	0x006A, r24
+				buffer_data[nuvarande_bytes++] = byte;
+ 2cc:	80 91 68 00 	lds	r24, 0x0068
+ 2d0:	e8 2f       	mov	r30, r24
+ 2d2:	f0 e0       	ldi	r31, 0x00	; 0
+ 2d4:	ea 54       	subi	r30, 0x4A	; 74
+ 2d6:	ff 4f       	sbci	r31, 0xFF	; 255
+ 2d8:	20 83       	st	Z, r18
+ 2da:	8f 5f       	subi	r24, 0xFF	; 255
+ 2dc:	80 93 68 00 	sts	0x0068, r24
+				steg = 2;
+ 2e0:	82 e0       	ldi	r24, 0x02	; 2
+ 2e2:	90 e0       	ldi	r25, 0x00	; 0
+ 2e4:	90 93 6c 00 	sts	0x006C, r25
+ 2e8:	80 93 6b 00 	sts	0x006B, r24
+ 2ec:	3f c0       	rjmp	.+126    	; 0x36c <__vector_11+0x10e>
+				break;
+			}
+		case 2: // Spara data
+			{
+				if(nuvarande_bytes == antal_bytes )
+ 2ee:	90 91 68 00 	lds	r25, 0x0068
+ 2f2:	80 91 6a 00 	lds	r24, 0x006A
+ 2f6:	e9 2f       	mov	r30, r25
+ 2f8:	f0 e0       	ldi	r31, 0x00	; 0
+ 2fa:	2f 7b       	andi	r18, 0xBF	; 191
+ 2fc:	98 17       	cp	r25, r24
+ 2fe:	31 f4       	brne	.+12     	; 0x30c <__vector_11+0xae>
+				{
+					buffer_data[nuvarande_bytes] = (byte & 0b10111111);
+ 300:	ea 54       	subi	r30, 0x4A	; 74
+ 302:	ff 4f       	sbci	r31, 0xFF	; 255
+ 304:	20 83       	st	Z, r18
+					steg = 3;
+ 306:	83 e0       	ldi	r24, 0x03	; 3
+ 308:	90 e0       	ldi	r25, 0x00	; 0
+ 30a:	ec cf       	rjmp	.-40     	; 0x2e4 <__vector_11+0x86>
+				}
+				else
+				{
+					buffer_data[nuvarande_bytes++] = (byte & 0b10111111);
+ 30c:	ea 54       	subi	r30, 0x4A	; 74
+ 30e:	ff 4f       	sbci	r31, 0xFF	; 255
+ 310:	20 83       	st	Z, r18
+ 312:	9f 5f       	subi	r25, 0xFF	; 255
+ 314:	90 93 68 00 	sts	0x0068, r25
+ 318:	29 c0       	rjmp	.+82     	; 0x36c <__vector_11+0x10e>
+				}
+				break;
+			}
+		case 3: // STOP
+			{ 
+				if(byte == 126)
+ 31a:	2e 37       	cpi	r18, 0x7E	; 126
+ 31c:	e1 f4       	brne	.+56     	; 0x356 <__vector_11+0xf8>
+				{
+				data[0] = buffer_data[0];
+ 31e:	80 91 b6 00 	lds	r24, 0x00B6
+ 322:	80 93 62 00 	sts	0x0062, r24
+				data[1] = buffer_data[1];
+ 326:	80 91 b7 00 	lds	r24, 0x00B7
+ 32a:	80 93 63 00 	sts	0x0063, r24
+				data[2] = buffer_data[2];
+ 32e:	80 91 b8 00 	lds	r24, 0x00B8
+ 332:	80 93 64 00 	sts	0x0064, r24
+				data[3] = buffer_data[3];
+ 336:	80 91 b9 00 	lds	r24, 0x00B9
+ 33a:	80 93 65 00 	sts	0x0065, r24
+				data[4] = buffer_data[4];
+ 33e:	80 91 ba 00 	lds	r24, 0x00BA
+ 342:	80 93 66 00 	sts	0x0066, r24
+				data[5] = buffer_data[5];	 
+ 346:	80 91 bb 00 	lds	r24, 0x00BB
+ 34a:	80 93 67 00 	sts	0x0067, r24
+					// Hantera mottagningen
+				if(i2c_writebyte(styr_adress))
+ 34e:	80 91 60 00 	lds	r24, 0x0060
+ 352:	0e 94 63 00 	call	0xc6	; 0xc6 <i2c_writebyte>
+				{
+					steg = 0;
+				} // Allt som skickas ifrån datorn via blåtand ska alltid gå till styrenheten
+				
+				}
+				steg = 0; // Nollställ mottagningsskvensen
+ 356:	10 92 6c 00 	sts	0x006C, r1
+ 35a:	10 92 6b 00 	sts	0x006B, r1
+				nuvarande_bytes = 0;
+ 35e:	10 92 68 00 	sts	0x0068, r1
+ 362:	04 c0       	rjmp	.+8      	; 0x36c <__vector_11+0x10e>
+				break;
+			}
+		default:
+			{
+				steg = 0; // Nollställ mottagning
+ 364:	10 92 6c 00 	sts	0x006C, r1
+ 368:	10 92 6b 00 	sts	0x006B, r1
+			}
+		}
+//	}
+	
+}
+ 36c:	ff 91       	pop	r31
+ 36e:	ef 91       	pop	r30
+ 370:	bf 91       	pop	r27
+ 372:	af 91       	pop	r26
+ 374:	9f 91       	pop	r25
+ 376:	8f 91       	pop	r24
+ 378:	7f 91       	pop	r23
+ 37a:	6f 91       	pop	r22
+ 37c:	5f 91       	pop	r21
+ 37e:	4f 91       	pop	r20
+ 380:	3f 91       	pop	r19
+ 382:	2f 91       	pop	r18
+ 384:	0f 90       	pop	r0
+ 386:	0f be       	out	0x3f, r0	; 63
+ 388:	0f 90       	pop	r0
+ 38a:	1f 90       	pop	r1
+ 38c:	18 95       	reti
+
+0000038e <main>:
+#include <timer.h>
+
+
+int main()
+{
+	TIMER0init();
+ 38e:	0e 94 cf 01 	call	0x39e	; 0x39e <TIMER0init>
+	twi_init();	
+ 392:	0e 94 49 00 	call	0x92	; 0x92 <twi_init>
+	USART_Init();
+ 396:	0e 94 f1 00 	call	0x1e2	; 0x1e2 <USART_Init>
+	sei();
+ 39a:	78 94       	sei
+ 39c:	ff cf       	rjmp	.-2      	; 0x39c <main+0xe>
+
+0000039e <TIMER0init>:
+
+void TIMER0init()
+{
+	//DDRA = 0xFF; ; //set portd as output
+	//ställ in timer-prescaler till clk/1024
+	TCCR0 |= (1<<CS00)|(1<<CS02);
+ 39e:	83 b7       	in	r24, 0x33	; 51
+ 3a0:	85 60       	ori	r24, 0x05	; 5
+ 3a2:	83 bf       	out	0x33, r24	; 51
+
+	//enable interruptflagga ifall timern får
+	//overflow
+	TIMSK |= (1<<TOIE0);
+ 3a4:	89 b7       	in	r24, 0x39	; 57
+ 3a6:	81 60       	ori	r24, 0x01	; 1
+ 3a8:	89 bf       	out	0x39, r24	; 57
+}
+ 3aa:	08 95       	ret
+
+000003ac <__vector_9>:
+
+ISR(TIMER0_OVF_vect)
+{
+ 3ac:	1f 92       	push	r1
+ 3ae:	0f 92       	push	r0
+ 3b0:	0f b6       	in	r0, 0x3f	; 63
+ 3b2:	0f 92       	push	r0
+ 3b4:	11 24       	eor	r1, r1
+ 3b6:	2f 93       	push	r18
+ 3b8:	3f 93       	push	r19
+ 3ba:	4f 93       	push	r20
+ 3bc:	5f 93       	push	r21
+ 3be:	6f 93       	push	r22
+ 3c0:	7f 93       	push	r23
+ 3c2:	8f 93       	push	r24
+ 3c4:	9f 93       	push	r25
+ 3c6:	af 93       	push	r26
+ 3c8:	bf 93       	push	r27
+ 3ca:	ef 93       	push	r30
+ 3cc:	ff 93       	push	r31
+	switch(timersteg)
+ 3ce:	80 91 75 00 	lds	r24, 0x0075
+ 3d2:	90 91 76 00 	lds	r25, 0x0076
+ 3d6:	82 30       	cpi	r24, 0x02	; 2
+ 3d8:	91 05       	cpc	r25, r1
+ 3da:	09 f4       	brne	.+2      	; 0x3de <__vector_9+0x32>
+ 3dc:	47 c0       	rjmp	.+142    	; 0x46c <__stack+0xd>
+ 3de:	83 30       	cpi	r24, 0x03	; 3
+ 3e0:	91 05       	cpc	r25, r1
+ 3e2:	34 f4       	brge	.+12     	; 0x3f0 <__vector_9+0x44>
+ 3e4:	00 97       	sbiw	r24, 0x00	; 0
+ 3e6:	61 f0       	breq	.+24     	; 0x400 <__vector_9+0x54>
+ 3e8:	01 97       	sbiw	r24, 0x01	; 1
+ 3ea:	09 f0       	breq	.+2      	; 0x3ee <__vector_9+0x42>
+ 3ec:	53 c0       	rjmp	.+166    	; 0x494 <__stack+0x35>
+ 3ee:	14 c0       	rjmp	.+40     	; 0x418 <__vector_9+0x6c>
+ 3f0:	83 30       	cpi	r24, 0x03	; 3
+ 3f2:	91 05       	cpc	r25, r1
+ 3f4:	09 f4       	brne	.+2      	; 0x3f8 <__vector_9+0x4c>
+ 3f6:	52 c0       	rjmp	.+164    	; 0x49c <__stack+0x3d>
+ 3f8:	04 97       	sbiw	r24, 0x04	; 4
+ 3fa:	09 f0       	breq	.+2      	; 0x3fe <__vector_9+0x52>
+ 3fc:	4b c0       	rjmp	.+150    	; 0x494 <__stack+0x35>
+ 3fe:	42 c0       	rjmp	.+132    	; 0x484 <__stack+0x25>
+		{
+
+	
+			case 0:		// begär sensordata från sensorenheten 
+			{
+				data[0] = RECEIVE_SENSOR_DATA;
+ 400:	81 e0       	ldi	r24, 0x01	; 1
+ 402:	80 93 62 00 	sts	0x0062, r24
+				if(i2c_writebyte(0x02))
+ 406:	82 e0       	ldi	r24, 0x02	; 2
+ 408:	0e 94 63 00 	call	0xc6	; 0xc6 <i2c_writebyte>
+ 40c:	89 2b       	or	r24, r25
+ 40e:	09 f4       	brne	.+2      	; 0x412 <__vector_9+0x66>
+ 410:	45 c0       	rjmp	.+138    	; 0x49c <__stack+0x3d>
+				{
+					timersteg = 1;
+ 412:	81 e0       	ldi	r24, 0x01	; 1
+ 414:	90 e0       	ldi	r25, 0x00	; 0
+ 416:	25 c0       	rjmp	.+74     	; 0x462 <__stack+0x3>
+				break;
+			}
+
+			case 1:		// ta emot och skicka sensordata till PC
+			{
+				if(i2c_readbyte(0x02))
+ 418:	82 e0       	ldi	r24, 0x02	; 2
+ 41a:	0e 94 a1 00 	call	0x142	; 0x142 <i2c_readbyte>
+ 41e:	89 2b       	or	r24, r25
+ 420:	e9 f1       	breq	.+122    	; 0x49c <__stack+0x3d>
+				{
+					
+					send_data[0] = data[0];
+ 422:	80 91 62 00 	lds	r24, 0x0062
+ 426:	80 93 6f 00 	sts	0x006F, r24
+					send_data[1] = data[1];
+ 42a:	80 91 63 00 	lds	r24, 0x0063
+ 42e:	80 93 70 00 	sts	0x0070, r24
+					send_data[2] = data[2];
+ 432:	80 91 64 00 	lds	r24, 0x0064
+ 436:	80 93 71 00 	sts	0x0071, r24
+					send_data[3] = data[3];
+ 43a:	80 91 65 00 	lds	r24, 0x0065
+ 43e:	80 93 72 00 	sts	0x0072, r24
+					send_data[4] = data[4];
+ 442:	80 91 66 00 	lds	r24, 0x0066
+ 446:	80 93 73 00 	sts	0x0073, r24
+					send_data[5] = data[5];
+ 44a:	80 91 67 00 	lds	r24, 0x0067
+ 44e:	80 93 74 00 	sts	0x0074, r24
+					USART_Transmit(send_data, sensor_datatyp, 6);
+ 452:	8f e6       	ldi	r24, 0x6F	; 111
+ 454:	90 e0       	ldi	r25, 0x00	; 0
+ 456:	60 e7       	ldi	r22, 0x70	; 112
+ 458:	46 e0       	ldi	r20, 0x06	; 6
+ 45a:	0e 94 0c 01 	call	0x218	; 0x218 <USART_Transmit>
+					timersteg = 2;
+ 45e:	82 e0       	ldi	r24, 0x02	; 2
+ 460:	90 e0       	ldi	r25, 0x00	; 0
+ 462:	90 93 76 00 	sts	0x0076, r25
+ 466:	80 93 75 00 	sts	0x0075, r24
+ 46a:	18 c0       	rjmp	.+48     	; 0x49c <__stack+0x3d>
+				}
+				break;
+			}
+			//Kolla om styrenheten har gått klart
+			case 2:		
+				if(i2c_readbyte(0x01))
+ 46c:	81 e0       	ldi	r24, 0x01	; 1
+ 46e:	0e 94 a1 00 	call	0x142	; 0x142 <i2c_readbyte>
+ 472:	89 2b       	or	r24, r25
+ 474:	79 f0       	breq	.+30     	; 0x494 <__stack+0x35>
+				{
+					if(data[0] == 1)
+ 476:	80 91 62 00 	lds	r24, 0x0062
+ 47a:	81 30       	cpi	r24, 0x01	; 1
+ 47c:	59 f4       	brne	.+22     	; 0x494 <__stack+0x35>
+					{
+						timersteg = 3;
+ 47e:	83 e0       	ldi	r24, 0x03	; 3
+ 480:	90 e0       	ldi	r25, 0x00	; 0
+ 482:	ef cf       	rjmp	.-34     	; 0x462 <__stack+0x3>
+				break;
+			}
+		
+			case 4:	// ta emot och skicka styrdata till STYRENHET
+			{
+				if(i2c_readbyte(0x02))
+ 484:	82 e0       	ldi	r24, 0x02	; 2
+ 486:	0e 94 a1 00 	call	0x142	; 0x142 <i2c_readbyte>
+ 48a:	89 2b       	or	r24, r25
+ 48c:	39 f0       	breq	.+14     	; 0x49c <__stack+0x3d>
+				{
+					i2c_writebyte(0x01); 
+ 48e:	81 e0       	ldi	r24, 0x01	; 1
+ 490:	0e 94 63 00 	call	0xc6	; 0xc6 <i2c_writebyte>
+					}
+				break;
+			}  */
+			default:
+			{
+				timersteg = 0;
+ 494:	10 92 76 00 	sts	0x0076, r1
+ 498:	10 92 75 00 	sts	0x0075, r1
+				break;
+			}
+		}
+}
+ 49c:	ff 91       	pop	r31
+ 49e:	ef 91       	pop	r30
+ 4a0:	bf 91       	pop	r27
+ 4a2:	af 91       	pop	r26
+ 4a4:	9f 91       	pop	r25
+ 4a6:	8f 91       	pop	r24
+ 4a8:	7f 91       	pop	r23
+ 4aa:	6f 91       	pop	r22
+ 4ac:	5f 91       	pop	r21
+ 4ae:	4f 91       	pop	r20
+ 4b0:	3f 91       	pop	r19
+ 4b2:	2f 91       	pop	r18
+ 4b4:	0f 90       	pop	r0
+ 4b6:	0f be       	out	0x3f, r0	; 63
+ 4b8:	0f 90       	pop	r0
+ 4ba:	1f 90       	pop	r1
+ 4bc:	18 95       	reti
+
+000004be <_exit>:
+ 4be:	f8 94       	cli
+
+000004c0 <__stop_program>:
+ 4c0:	ff cf       	rjmp	.-2      	; 0x4c0 <__stop_program>

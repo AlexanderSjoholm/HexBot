@@ -1,0 +1,404 @@
+Archive member included because of file (symbol)
+
+c:/winavr/bin/../lib/gcc/avr/4.3.3/avr5\libgcc.a(_exit.o)
+                              c:/winavr/bin/../lib/gcc/avr/4.3.3/../../../../avr/lib/avr5/crtm16a.o (exit)
+c:/winavr/bin/../lib/gcc/avr/4.3.3/avr5\libgcc.a(_copy_data.o)
+                              styrenheten.o (__do_copy_data)
+c:/winavr/bin/../lib/gcc/avr/4.3.3/avr5\libgcc.a(_clear_bss.o)
+                              styrenheten.o (__do_clear_bss)
+
+Allocating common symbols
+Common symbol       size              file
+
+benB                0x2               styrenheten.o
+data                0x6               styrenheten.o
+benA                0x2               styrenheten.o
+
+Memory Configuration
+
+Name             Origin             Length             Attributes
+text             0x00000000         0x00020000         xr
+data             0x00800060         0x0000ffa0         rw !x
+eeprom           0x00810000         0x00010000         rw !x
+fuse             0x00820000         0x00000400         rw !x
+lock             0x00830000         0x00000400         rw !x
+signature        0x00840000         0x00000400         rw !x
+*default*        0x00000000         0xffffffff
+
+Linker script and memory map
+
+LOAD c:/winavr/bin/../lib/gcc/avr/4.3.3/../../../../avr/lib/avr5/crtm16a.o
+LOAD styrenheten.o
+LOAD styrmatris.o
+LOAD c:/winavr/bin/../lib/gcc/avr/4.3.3/avr5\libgcc.a
+LOAD c:/winavr/bin/../lib/gcc/avr/4.3.3/../../../../avr/lib/avr5\libc.a
+LOAD c:/winavr/bin/../lib/gcc/avr/4.3.3/avr5\libgcc.a
+
+.hash
+ *(.hash)
+
+.dynsym
+ *(.dynsym)
+
+.dynstr
+ *(.dynstr)
+
+.gnu.version
+ *(.gnu.version)
+
+.gnu.version_d
+ *(.gnu.version_d)
+
+.gnu.version_r
+ *(.gnu.version_r)
+
+.rel.init
+ *(.rel.init)
+
+.rela.init
+ *(.rela.init)
+
+.rel.text
+ *(.rel.text)
+ *(.rel.text.*)
+ *(.rel.gnu.linkonce.t*)
+
+.rela.text
+ *(.rela.text)
+ *(.rela.text.*)
+ *(.rela.gnu.linkonce.t*)
+
+.rel.fini
+ *(.rel.fini)
+
+.rela.fini
+ *(.rela.fini)
+
+.rel.rodata
+ *(.rel.rodata)
+ *(.rel.rodata.*)
+ *(.rel.gnu.linkonce.r*)
+
+.rela.rodata
+ *(.rela.rodata)
+ *(.rela.rodata.*)
+ *(.rela.gnu.linkonce.r*)
+
+.rel.data
+ *(.rel.data)
+ *(.rel.data.*)
+ *(.rel.gnu.linkonce.d*)
+
+.rela.data
+ *(.rela.data)
+ *(.rela.data.*)
+ *(.rela.gnu.linkonce.d*)
+
+.rel.ctors
+ *(.rel.ctors)
+
+.rela.ctors
+ *(.rela.ctors)
+
+.rel.dtors
+ *(.rel.dtors)
+
+.rela.dtors
+ *(.rela.dtors)
+
+.rel.got
+ *(.rel.got)
+
+.rela.got
+ *(.rela.got)
+
+.rel.bss
+ *(.rel.bss)
+
+.rela.bss
+ *(.rela.bss)
+
+.rel.plt
+ *(.rel.plt)
+
+.rela.plt
+ *(.rela.plt)
+
+.text           0x00000000     0x1022
+ *(.vectors)
+ .vectors       0x00000000       0x54 c:/winavr/bin/../lib/gcc/avr/4.3.3/../../../../avr/lib/avr5/crtm16a.o
+                0x00000000                __vectors
+                0x00000000                __vector_default
+ *(.vectors)
+ *(.progmem.gcc*)
+ *(.progmem*)
+ .progmem.data  0x00000054      0x654 styrmatris.o
+                0x00000054                styrmatris
+                0x000006a8                . = ALIGN (0x2)
+                0x000006a8                __trampolines_start = .
+ *(.trampolines)
+ .trampolines   0x000006a8        0x0 linker stubs
+ *(.trampolines*)
+                0x000006a8                __trampolines_end = .
+ *(.jumptables)
+ *(.jumptables*)
+ *(.lowtext)
+ *(.lowtext*)
+                0x000006a8                __ctors_start = .
+ *(.ctors)
+                0x000006a8                __ctors_end = .
+                0x000006a8                __dtors_start = .
+ *(.dtors)
+                0x000006a8                __dtors_end = .
+ SORT(*)(.ctors)
+ SORT(*)(.dtors)
+ *(.init0)
+ .init0         0x000006a8        0x0 c:/winavr/bin/../lib/gcc/avr/4.3.3/../../../../avr/lib/avr5/crtm16a.o
+                0x000006a8                __init
+ *(.init0)
+ *(.init1)
+ *(.init1)
+ *(.init2)
+ .init2         0x000006a8        0xc c:/winavr/bin/../lib/gcc/avr/4.3.3/../../../../avr/lib/avr5/crtm16a.o
+ *(.init2)
+ *(.init3)
+ *(.init3)
+ *(.init4)
+ .init4         0x000006b4       0x16 c:/winavr/bin/../lib/gcc/avr/4.3.3/avr5\libgcc.a(_copy_data.o)
+                0x000006b4                __do_copy_data
+ .init4         0x000006ca       0x10 c:/winavr/bin/../lib/gcc/avr/4.3.3/avr5\libgcc.a(_clear_bss.o)
+                0x000006ca                __do_clear_bss
+ *(.init4)
+ *(.init5)
+ *(.init5)
+ *(.init6)
+ *(.init6)
+ *(.init7)
+ *(.init7)
+ *(.init8)
+ *(.init8)
+ *(.init9)
+ .init9         0x000006da        0x8 c:/winavr/bin/../lib/gcc/avr/4.3.3/../../../../avr/lib/avr5/crtm16a.o
+ *(.init9)
+ *(.text)
+ .text          0x000006e2        0x4 c:/winavr/bin/../lib/gcc/avr/4.3.3/../../../../avr/lib/avr5/crtm16a.o
+                0x000006e2                __vector_1
+                0x000006e2                __vector_12
+                0x000006e2                __bad_interrupt
+                0x000006e2                __vector_6
+                0x000006e2                __vector_3
+                0x000006e2                __vector_11
+                0x000006e2                __vector_13
+                0x000006e2                __vector_19
+                0x000006e2                __vector_7
+                0x000006e2                __vector_5
+                0x000006e2                __vector_4
+                0x000006e2                __vector_9
+                0x000006e2                __vector_2
+                0x000006e2                __vector_15
+                0x000006e2                __vector_14
+                0x000006e2                __vector_10
+                0x000006e2                __vector_16
+                0x000006e2                __vector_18
+                0x000006e2                __vector_20
+ .text          0x000006e6      0x938 styrenheten.o
+                0x00000de0                TWIslave_init
+                0x00000718                uppdatera_ben_mux
+                0x00000ed6                __vector_17
+                0x000006e6                ben_modulo
+                0x0000100a                main
+                0x00000dea                interpret_data
+                0x0000079a                __vector_8
+                0x00000748                styr_setup
+ .text          0x0000101e        0x0 styrmatris.o
+ .text          0x0000101e        0x0 c:/winavr/bin/../lib/gcc/avr/4.3.3/avr5\libgcc.a(_exit.o)
+ .text          0x0000101e        0x0 c:/winavr/bin/../lib/gcc/avr/4.3.3/avr5\libgcc.a(_copy_data.o)
+ .text          0x0000101e        0x0 c:/winavr/bin/../lib/gcc/avr/4.3.3/avr5\libgcc.a(_clear_bss.o)
+                0x0000101e                . = ALIGN (0x2)
+ *(.text.*)
+ .text.libgcc   0x0000101e        0x0 c:/winavr/bin/../lib/gcc/avr/4.3.3/avr5\libgcc.a(_exit.o)
+ .text.libgcc   0x0000101e        0x0 c:/winavr/bin/../lib/gcc/avr/4.3.3/avr5\libgcc.a(_copy_data.o)
+ .text.libgcc   0x0000101e        0x0 c:/winavr/bin/../lib/gcc/avr/4.3.3/avr5\libgcc.a(_clear_bss.o)
+                0x0000101e                . = ALIGN (0x2)
+ *(.fini9)
+ .fini9         0x0000101e        0x0 c:/winavr/bin/../lib/gcc/avr/4.3.3/avr5\libgcc.a(_exit.o)
+                0x0000101e                exit
+                0x0000101e                _exit
+ *(.fini9)
+ *(.fini8)
+ *(.fini8)
+ *(.fini7)
+ *(.fini7)
+ *(.fini6)
+ *(.fini6)
+ *(.fini5)
+ *(.fini5)
+ *(.fini4)
+ *(.fini4)
+ *(.fini3)
+ *(.fini3)
+ *(.fini2)
+ *(.fini2)
+ *(.fini1)
+ *(.fini1)
+ *(.fini0)
+ .fini0         0x0000101e        0x4 c:/winavr/bin/../lib/gcc/avr/4.3.3/avr5\libgcc.a(_exit.o)
+ *(.fini0)
+                0x00001022                _etext = .
+
+.data           0x00800060       0x10 load address 0x00001022
+                0x00800060                PROVIDE (__data_start, .)
+ *(.data)
+ .data          0x00800060        0x0 c:/winavr/bin/../lib/gcc/avr/4.3.3/../../../../avr/lib/avr5/crtm16a.o
+ .data          0x00800060        0xf styrenheten.o
+                0x00800060                movement_complete
+                0x00800061                uppdrag
+                0x00800063                position
+                0x0080006b                riktning
+                0x00800065                top
+                0x00800067                varv_tak
+                0x0080006d                temp_riktning
+                0x00800069                varv
+ .data          0x0080006f        0x0 styrmatris.o
+ .data          0x0080006f        0x0 c:/winavr/bin/../lib/gcc/avr/4.3.3/avr5\libgcc.a(_exit.o)
+ .data          0x0080006f        0x0 c:/winavr/bin/../lib/gcc/avr/4.3.3/avr5\libgcc.a(_copy_data.o)
+ .data          0x0080006f        0x0 c:/winavr/bin/../lib/gcc/avr/4.3.3/avr5\libgcc.a(_clear_bss.o)
+ *(.data*)
+ *(.rodata)
+ *(.rodata*)
+ *(.gnu.linkonce.d*)
+                0x00800070                . = ALIGN (0x2)
+ *fill*         0x0080006f        0x1 00
+                0x00800070                _edata = .
+                0x00800070                PROVIDE (__data_end, .)
+
+.bss            0x00800070       0x21
+                0x00800070                PROVIDE (__bss_start, .)
+ *(.bss)
+ .bss           0x00800070        0x0 c:/winavr/bin/../lib/gcc/avr/4.3.3/../../../../avr/lib/avr5/crtm16a.o
+ .bss           0x00800070       0x17 styrenheten.o
+                0x0080007e                reglering
+                0x00800084                temp
+                0x00800080                steps
+                0x00800072                kompensation
+                0x00800086                bytes
+                0x00800070                mux_sig
+                0x00800082                servo
+ .bss           0x00800087        0x0 styrmatris.o
+ .bss           0x00800087        0x0 c:/winavr/bin/../lib/gcc/avr/4.3.3/avr5\libgcc.a(_exit.o)
+ .bss           0x00800087        0x0 c:/winavr/bin/../lib/gcc/avr/4.3.3/avr5\libgcc.a(_copy_data.o)
+ .bss           0x00800087        0x0 c:/winavr/bin/../lib/gcc/avr/4.3.3/avr5\libgcc.a(_clear_bss.o)
+ *(.bss*)
+ *(COMMON)
+ COMMON         0x00800087        0xa styrenheten.o
+                0x00800087                benB
+                0x00800089                data
+                0x0080008f                benA
+                0x00800091                PROVIDE (__bss_end, .)
+                0x00001022                __data_load_start = LOADADDR (.data)
+                0x00001032                __data_load_end = (__data_load_start + SIZEOF (.data))
+
+.noinit         0x00800091        0x0
+                0x00800091                PROVIDE (__noinit_start, .)
+ *(.noinit*)
+                0x00800091                PROVIDE (__noinit_end, .)
+                0x00800091                _end = .
+                0x00800091                PROVIDE (__heap_start, .)
+
+.eeprom         0x00810000        0x0
+ *(.eeprom*)
+                0x00810000                __eeprom_end = .
+
+.fuse
+ *(.fuse)
+ *(.lfuse)
+ *(.hfuse)
+ *(.efuse)
+
+.lock
+ *(.lock*)
+
+.signature
+ *(.signature*)
+
+.stab
+ *(.stab)
+
+.stabstr
+ *(.stabstr)
+
+.stab.excl
+ *(.stab.excl)
+
+.stab.exclstr
+ *(.stab.exclstr)
+
+.stab.index
+ *(.stab.index)
+
+.stab.indexstr
+ *(.stab.indexstr)
+
+.comment
+ *(.comment)
+
+.debug
+ *(.debug)
+
+.line
+ *(.line)
+
+.debug_srcinfo
+ *(.debug_srcinfo)
+
+.debug_sfnames
+ *(.debug_sfnames)
+
+.debug_aranges  0x00000000       0x20
+ *(.debug_aranges)
+ .debug_aranges
+                0x00000000       0x20 styrenheten.o
+
+.debug_pubnames
+                0x00000000      0x18d
+ *(.debug_pubnames)
+ .debug_pubnames
+                0x00000000      0x16c styrenheten.o
+ .debug_pubnames
+                0x0000016c       0x21 styrmatris.o
+
+.debug_info     0x00000000      0x64d
+ *(.debug_info)
+ .debug_info    0x00000000      0x5b6 styrenheten.o
+ .debug_info    0x000005b6       0x97 styrmatris.o
+ *(.gnu.linkonce.wi.*)
+
+.debug_abbrev   0x00000000      0x1d1
+ *(.debug_abbrev)
+ .debug_abbrev  0x00000000      0x174 styrenheten.o
+ .debug_abbrev  0x00000174       0x5d styrmatris.o
+
+.debug_line     0x00000000      0x639
+ *(.debug_line)
+ .debug_line    0x00000000      0x5e8 styrenheten.o
+ .debug_line    0x000005e8       0x51 styrmatris.o
+
+.debug_frame    0x00000000       0x90
+ *(.debug_frame)
+ .debug_frame   0x00000000       0x90 styrenheten.o
+
+.debug_str      0x00000000      0x193
+ *(.debug_str)
+ .debug_str     0x00000000      0x183 styrenheten.o
+                                0x1d4 (size before relaxing)
+ .debug_str     0x00000183       0x10 styrmatris.o
+                                 0xac (size before relaxing)
+
+.debug_loc      0x00000000      0x530
+ *(.debug_loc)
+ .debug_loc     0x00000000      0x530 styrenheten.o
+
+.debug_macinfo
+ *(.debug_macinfo)
+OUTPUT(Styrenheten.elf elf32-avr)
+LOAD linker stubs

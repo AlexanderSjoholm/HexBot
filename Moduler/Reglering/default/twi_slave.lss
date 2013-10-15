@@ -1,0 +1,1612 @@
+
+twi_slave.elf:     file format elf32-avr
+
+Sections:
+Idx Name          Size      VMA       LMA       File off  Algn
+  0 .text         0000068a  00000000  00000000  00000074  2**1
+                  CONTENTS, ALLOC, LOAD, READONLY, CODE
+  1 .bss          0000003f  00800060  00800060  000006fe  2**0
+                  ALLOC
+  2 .debug_aranges 000000a0  00000000  00000000  000006fe  2**0
+                  CONTENTS, READONLY, DEBUGGING
+  3 .debug_pubnames 000003f6  00000000  00000000  0000079e  2**0
+                  CONTENTS, READONLY, DEBUGGING
+  4 .debug_info   0000144e  00000000  00000000  00000b94  2**0
+                  CONTENTS, READONLY, DEBUGGING
+  5 .debug_abbrev 000004bc  00000000  00000000  00001fe2  2**0
+                  CONTENTS, READONLY, DEBUGGING
+  6 .debug_line   00000959  00000000  00000000  0000249e  2**0
+                  CONTENTS, READONLY, DEBUGGING
+  7 .debug_frame  000001e0  00000000  00000000  00002df8  2**2
+                  CONTENTS, READONLY, DEBUGGING
+  8 .debug_str    000002bb  00000000  00000000  00002fd8  2**0
+                  CONTENTS, READONLY, DEBUGGING
+  9 .debug_loc    000003a9  00000000  00000000  00003293  2**0
+                  CONTENTS, READONLY, DEBUGGING
+
+Disassembly of section .text:
+
+00000000 <__vectors>:
+   0:	0c 94 2a 00 	jmp	0x54	; 0x54 <__ctors_end>
+   4:	0c 94 3c 00 	jmp	0x78	; 0x78 <__bad_interrupt>
+   8:	0c 94 3c 00 	jmp	0x78	; 0x78 <__bad_interrupt>
+   c:	0c 94 3c 00 	jmp	0x78	; 0x78 <__bad_interrupt>
+  10:	0c 94 3c 00 	jmp	0x78	; 0x78 <__bad_interrupt>
+  14:	0c 94 3c 00 	jmp	0x78	; 0x78 <__bad_interrupt>
+  18:	0c 94 3c 00 	jmp	0x78	; 0x78 <__bad_interrupt>
+  1c:	0c 94 3c 00 	jmp	0x78	; 0x78 <__bad_interrupt>
+  20:	0c 94 3c 00 	jmp	0x78	; 0x78 <__bad_interrupt>
+  24:	0c 94 bb 01 	jmp	0x376	; 0x376 <__vector_9>
+  28:	0c 94 3c 00 	jmp	0x78	; 0x78 <__bad_interrupt>
+  2c:	0c 94 3c 00 	jmp	0x78	; 0x78 <__bad_interrupt>
+  30:	0c 94 3c 00 	jmp	0x78	; 0x78 <__bad_interrupt>
+  34:	0c 94 3c 00 	jmp	0x78	; 0x78 <__bad_interrupt>
+  38:	0c 94 6a 01 	jmp	0x2d4	; 0x2d4 <__vector_14>
+  3c:	0c 94 3c 00 	jmp	0x78	; 0x78 <__bad_interrupt>
+  40:	0c 94 3c 00 	jmp	0x78	; 0x78 <__bad_interrupt>
+  44:	0c 94 7f 00 	jmp	0xfe	; 0xfe <__vector_17>
+  48:	0c 94 3c 00 	jmp	0x78	; 0x78 <__bad_interrupt>
+  4c:	0c 94 3c 00 	jmp	0x78	; 0x78 <__bad_interrupt>
+  50:	0c 94 3c 00 	jmp	0x78	; 0x78 <__bad_interrupt>
+
+00000054 <__ctors_end>:
+  54:	11 24       	eor	r1, r1
+  56:	1f be       	out	0x3f, r1	; 63
+  58:	cf e5       	ldi	r28, 0x5F	; 95
+  5a:	d4 e0       	ldi	r29, 0x04	; 4
+  5c:	de bf       	out	0x3e, r29	; 62
+  5e:	cd bf       	out	0x3d, r28	; 61
+
+00000060 <__do_clear_bss>:
+  60:	10 e0       	ldi	r17, 0x00	; 0
+  62:	a0 e6       	ldi	r26, 0x60	; 96
+  64:	b0 e0       	ldi	r27, 0x00	; 0
+  66:	01 c0       	rjmp	.+2      	; 0x6a <.do_clear_bss_start>
+
+00000068 <.do_clear_bss_loop>:
+  68:	1d 92       	st	X+, r1
+
+0000006a <.do_clear_bss_start>:
+  6a:	af 39       	cpi	r26, 0x9F	; 159
+  6c:	b1 07       	cpc	r27, r17
+  6e:	e1 f7       	brne	.-8      	; 0x68 <.do_clear_bss_loop>
+  70:	0e 94 aa 01 	call	0x354	; 0x354 <main>
+  74:	0c 94 43 03 	jmp	0x686	; 0x686 <_exit>
+
+00000078 <__bad_interrupt>:
+  78:	0c 94 00 00 	jmp	0	; 0x0 <__vectors>
+
+0000007c <TWIslave_init>:
+unsigned char bytes = 0;
+
+//Initiering av TWI:n
+void TWIslave_init()
+{
+	TWAR = (SLAVE_ADRESS<<1);
+  7c:	84 e0       	ldi	r24, 0x04	; 4
+  7e:	82 b9       	out	0x02, r24	; 2
+	//ställ in bitrate
+	//TWBR = 0x0A;
+	//ställ in TWI-srreg så att den skickar ack när den addreseras
+	TWCR = (1<<TWEN)|(1<<TWIE)|(0<<TWINT)|
+  80:	85 e4       	ldi	r24, 0x45	; 69
+  82:	86 bf       	out	0x36, r24	; 54
+		   (1<<TWEA)|(0<<TWSTA)|(0<<TWSTO)|
+           (0<<TWWC);
+}
+  84:	08 95       	ret
+
+00000086 <interpret_data>:
+
+void interpret_data()
+{
+	//Första byten i sändningen är alltid för att
+	//avgöra vilken typ av data som skall skickas
+	switch(data[0])
+  86:	80 91 81 00 	lds	r24, 0x0081
+  8a:	81 30       	cpi	r24, 0x01	; 1
+  8c:	19 f0       	breq	.+6      	; 0x94 <interpret_data+0xe>
+  8e:	84 30       	cpi	r24, 0x04	; 4
+  90:	a9 f5       	brne	.+106    	; 0xfc <interpret_data+0x76>
+  92:	18 c0       	rjmp	.+48     	; 0xc4 <interpret_data+0x3e>
+		case SEND_SENSOR_DATA:
+		{
+			unsigned char i;
+			for(i = 0; i < 6; i++)
+			{
+				data[i] = measurements[i][0];
+  94:	80 91 63 00 	lds	r24, 0x0063
+  98:	80 93 81 00 	sts	0x0081, r24
+  9c:	80 91 67 00 	lds	r24, 0x0067
+  a0:	80 93 82 00 	sts	0x0082, r24
+  a4:	80 91 6b 00 	lds	r24, 0x006B
+  a8:	80 93 83 00 	sts	0x0083, r24
+  ac:	80 91 6f 00 	lds	r24, 0x006F
+  b0:	80 93 84 00 	sts	0x0084, r24
+  b4:	80 91 73 00 	lds	r24, 0x0073
+  b8:	80 93 85 00 	sts	0x0085, r24
+  bc:	80 91 77 00 	lds	r24, 0x0077
+  c0:	80 93 86 00 	sts	0x0086, r24
+		}
+		case SEND_MOVEMENT_DATA:
+		{
+			//Detta mottas efter det att styrenheten fullföljt sin senaste instuktion
+			//Nu skall en ny koll efter väggar göras.
+			look_for_walls();
+  c4:	0e 94 e1 02 	call	0x5c2	; 0x5c2 <look_for_walls>
+			//Sedan skall nästa rörelse bestämmas
+			movement_direction();
+  c8:	0e 94 24 03 	call	0x648	; 0x648 <movement_direction>
+			unsigned char i;
+			for(i = 0; i < 6; i++)
+			{
+				data[i] = movement_data[i];
+  cc:	80 91 87 00 	lds	r24, 0x0087
+  d0:	80 93 81 00 	sts	0x0081, r24
+  d4:	80 91 88 00 	lds	r24, 0x0088
+  d8:	80 93 82 00 	sts	0x0082, r24
+  dc:	80 91 89 00 	lds	r24, 0x0089
+  e0:	80 93 83 00 	sts	0x0083, r24
+  e4:	80 91 8a 00 	lds	r24, 0x008A
+  e8:	80 93 84 00 	sts	0x0084, r24
+  ec:	80 91 8b 00 	lds	r24, 0x008B
+  f0:	80 93 85 00 	sts	0x0085, r24
+  f4:	80 91 8c 00 	lds	r24, 0x008C
+  f8:	80 93 86 00 	sts	0x0086, r24
+  fc:	08 95       	ret
+
+000000fe <__vector_17>:
+
+//Tar ej emot några general calls. Är villig hela tiden
+//(säger inte nej till en sändning/mottagning)
+
+ISR(TWI_vect)
+{
+  fe:	1f 92       	push	r1
+ 100:	0f 92       	push	r0
+ 102:	0f b6       	in	r0, 0x3f	; 63
+ 104:	0f 92       	push	r0
+ 106:	11 24       	eor	r1, r1
+ 108:	2f 93       	push	r18
+ 10a:	3f 93       	push	r19
+ 10c:	4f 93       	push	r20
+ 10e:	5f 93       	push	r21
+ 110:	6f 93       	push	r22
+ 112:	7f 93       	push	r23
+ 114:	8f 93       	push	r24
+ 116:	9f 93       	push	r25
+ 118:	af 93       	push	r26
+ 11a:	bf 93       	push	r27
+ 11c:	ef 93       	push	r30
+ 11e:	ff 93       	push	r31
+	switch(TWSR & 0xF8)
+ 120:	81 b1       	in	r24, 0x01	; 1
+ 122:	90 e0       	ldi	r25, 0x00	; 0
+ 124:	88 7f       	andi	r24, 0xF8	; 248
+ 126:	90 70       	andi	r25, 0x00	; 0
+ 128:	80 3a       	cpi	r24, 0xA0	; 160
+ 12a:	91 05       	cpc	r25, r1
+ 12c:	31 f1       	breq	.+76     	; 0x17a <__vector_17+0x7c>
+ 12e:	81 3a       	cpi	r24, 0xA1	; 161
+ 130:	91 05       	cpc	r25, r1
+ 132:	5c f4       	brge	.+22     	; 0x14a <__vector_17+0x4c>
+ 134:	88 36       	cpi	r24, 0x68	; 104
+ 136:	91 05       	cpc	r25, r1
+ 138:	09 f4       	brne	.+2      	; 0x13c <__vector_17+0x3e>
+ 13a:	41 c0       	rjmp	.+130    	; 0x1be <__vector_17+0xc0>
+ 13c:	80 38       	cpi	r24, 0x80	; 128
+ 13e:	91 05       	cpc	r25, r1
+ 140:	89 f0       	breq	.+34     	; 0x164 <__vector_17+0x66>
+ 142:	80 36       	cpi	r24, 0x60	; 96
+ 144:	91 05       	cpc	r25, r1
+ 146:	f1 f5       	brne	.+124    	; 0x1c4 <__vector_17+0xc6>
+ 148:	0a c0       	rjmp	.+20     	; 0x15e <__vector_17+0x60>
+ 14a:	88 3b       	cpi	r24, 0xB8	; 184
+ 14c:	91 05       	cpc	r25, r1
+ 14e:	21 f1       	breq	.+72     	; 0x198 <__vector_17+0x9a>
+ 150:	88 3c       	cpi	r24, 0xC8	; 200
+ 152:	91 05       	cpc	r25, r1
+ 154:	a1 f1       	breq	.+104    	; 0x1be <__vector_17+0xc0>
+ 156:	88 3a       	cpi	r24, 0xA8	; 168
+ 158:	91 05       	cpc	r25, r1
+ 15a:	a1 f5       	brne	.+104    	; 0x1c4 <__vector_17+0xc6>
+ 15c:	11 c0       	rjmp	.+34     	; 0x180 <__vector_17+0x82>
+	{
+		// SLAVE RECEIVER
+		//---------------------------------------------------------
+		//SLA+W mottagen, ACK skickad
+		case TW_SR_SLA_ACK:
+			bytes = 0;
+ 15e:	10 92 60 00 	sts	0x0060, r1
+ 162:	2d c0       	rjmp	.+90     	; 0x1be <__vector_17+0xc0>
+			//Bry dig ej om general calls
+	
+		//Data mottagen, ACK skickad
+		case TW_SR_DATA_ACK:
+				//Spara ner data
+			data[bytes] = TWDR;
+ 164:	90 91 60 00 	lds	r25, 0x0060
+ 168:	83 b1       	in	r24, 0x03	; 3
+ 16a:	e9 2f       	mov	r30, r25
+ 16c:	f0 e0       	ldi	r31, 0x00	; 0
+ 16e:	ef 57       	subi	r30, 0x7F	; 127
+ 170:	ff 4f       	sbci	r31, 0xFF	; 255
+ 172:	80 83       	st	Z, r24
+			
+			//Om den kan ta emot mer data, skicka ack
+			if(bytes < MAX_DATA_BYTES)
+ 174:	96 30       	cpi	r25, 0x06	; 6
+ 176:	40 f5       	brcc	.+80     	; 0x1c8 <__vector_17+0xca>
+ 178:	19 c0       	rjmp	.+50     	; 0x1ac <__vector_17+0xae>
+
+		//Stop eller upprepad start när man är addreserad
+		case TW_SR_STOP:
+			
+			//Behandla meddelandet
+			interpret_data();
+ 17a:	0e 94 43 00 	call	0x86	; 0x86 <interpret_data>
+ 17e:	1f c0       	rjmp	.+62     	; 0x1be <__vector_17+0xc0>
+	
+		//Egen SLA+R mottagen, ACK skickad
+		case TW_ST_SLA_ACK:
+			bytes = 0;
+			//Skicka data och tag emot ack
+			TWDR = data[bytes];
+ 180:	80 91 81 00 	lds	r24, 0x0081
+ 184:	83 b9       	out	0x03, r24	; 3
+
+			TWCR |= (1<<TWINT)|(1<<TWEA); 
+ 186:	86 b7       	in	r24, 0x36	; 54
+ 188:	80 6c       	ori	r24, 0xC0	; 192
+ 18a:	86 bf       	out	0x36, r24	; 54
+			TWCR &= ~(0<<TWSTO);
+ 18c:	86 b7       	in	r24, 0x36	; 54
+ 18e:	86 bf       	out	0x36, r24	; 54
+			bytes += 1;               
+ 190:	81 e0       	ldi	r24, 0x01	; 1
+ 192:	80 93 60 00 	sts	0x0060, r24
+ 196:	18 c0       	rjmp	.+48     	; 0x1c8 <__vector_17+0xca>
+		break;
+			//Data skickad, ACK mottagen
+		case TW_ST_DATA_ACK:
+			//Skicka data och tag emot ack
+			if(bytes < MAX_DATA_BYTES )
+ 198:	90 91 60 00 	lds	r25, 0x0060
+ 19c:	96 30       	cpi	r25, 0x06	; 6
+ 19e:	a0 f4       	brcc	.+40     	; 0x1c8 <__vector_17+0xca>
+			{
+				TWDR = data[bytes];
+ 1a0:	e9 2f       	mov	r30, r25
+ 1a2:	f0 e0       	ldi	r31, 0x00	; 0
+ 1a4:	ef 57       	subi	r30, 0x7F	; 127
+ 1a6:	ff 4f       	sbci	r31, 0xFF	; 255
+ 1a8:	80 81       	ld	r24, Z
+ 1aa:	83 b9       	out	0x03, r24	; 3
+				TWCR |= (1<<TWINT)|(1<<TWEA);
+ 1ac:	86 b7       	in	r24, 0x36	; 54
+ 1ae:	80 6c       	ori	r24, 0xC0	; 192
+ 1b0:	86 bf       	out	0x36, r24	; 54
+				TWCR &= ~(0<<TWSTO);
+ 1b2:	86 b7       	in	r24, 0x36	; 54
+ 1b4:	86 bf       	out	0x36, r24	; 54
+				bytes += 1;
+ 1b6:	9f 5f       	subi	r25, 0xFF	; 255
+ 1b8:	90 93 60 00 	sts	0x0060, r25
+ 1bc:	05 c0       	rjmp	.+10     	; 0x1c8 <__vector_17+0xca>
+			}
+			*/
+		break;
+		case TW_ST_LAST_DATA:
+			//Tag emot framtida meddelanden
+			TWCR |= (1<<TWINT)|(1<<TWEA);
+ 1be:	86 b7       	in	r24, 0x36	; 54
+ 1c0:	80 6c       	ori	r24, 0xC0	; 192
+ 1c2:	86 bf       	out	0x36, r24	; 54
+			TWCR &= ~(0<<TWSTO);
+		break;
+		default:
+			TWCR &= ~(0<<TWSTO);
+ 1c4:	86 b7       	in	r24, 0x36	; 54
+ 1c6:	86 bf       	out	0x36, r24	; 54
+		break;
+				
+	}
+}
+ 1c8:	ff 91       	pop	r31
+ 1ca:	ef 91       	pop	r30
+ 1cc:	bf 91       	pop	r27
+ 1ce:	af 91       	pop	r26
+ 1d0:	9f 91       	pop	r25
+ 1d2:	8f 91       	pop	r24
+ 1d4:	7f 91       	pop	r23
+ 1d6:	6f 91       	pop	r22
+ 1d8:	5f 91       	pop	r21
+ 1da:	4f 91       	pop	r20
+ 1dc:	3f 91       	pop	r19
+ 1de:	2f 91       	pop	r18
+ 1e0:	0f 90       	pop	r0
+ 1e2:	0f be       	out	0x3f, r0	; 63
+ 1e4:	0f 90       	pop	r0
+ 1e6:	1f 90       	pop	r1
+ 1e8:	18 95       	reti
+
+000001ea <ADCinit>:
+//Direction anger vilken sensor som pekar framåt.
+unsigned char direction = 0;
+
+void ADCinit()
+{
+	ADCSRA |= (1<<ADEN)|(1<<ADIE)|(1<<ADPS1)|(1<<ADPS0); // set adc-prescaler, set adc enable and adc interrupt enable
+ 1ea:	86 b1       	in	r24, 0x06	; 6
+ 1ec:	8b 68       	ori	r24, 0x8B	; 139
+ 1ee:	86 b9       	out	0x06, r24	; 6
+	ADMUX |= (1<<REFS0) | (1 << ADLAR); // set adv vcc ref
+ 1f0:	87 b1       	in	r24, 0x07	; 7
+ 1f2:	80 66       	ori	r24, 0x60	; 96
+ 1f4:	87 b9       	out	0x07, r24	; 7
+	ADMUX |= adc_ch;
+ 1f6:	87 b1       	in	r24, 0x07	; 7
+ 1f8:	90 91 61 00 	lds	r25, 0x0061
+ 1fc:	89 2b       	or	r24, r25
+ 1fe:	87 b9       	out	0x07, r24	; 7
+}
+ 200:	08 95       	ret
+
+00000202 <read_sensors>:
+
+//läser av alla ir-sensorer och sparar ner dessa
+void read_sensors()
+{
+	mode = read_mode;
+ 202:	83 e0       	ldi	r24, 0x03	; 3
+ 204:	80 93 62 00 	sts	0x0062, r24
+	adc_ch = 0;
+ 208:	10 92 61 00 	sts	0x0061, r1
+	ADMUX &= 0xE0;
+ 20c:	87 b1       	in	r24, 0x07	; 7
+ 20e:	80 7e       	andi	r24, 0xE0	; 224
+ 210:	87 b9       	out	0x07, r24	; 7
+	ADCSRA |= (1 << ADSC);
+ 212:	36 9a       	sbi	0x06, 6	; 6
+
+}
+ 214:	08 95       	ret
+
+00000216 <get_measurements>:
+
+unsigned char get_measurements(unsigned char sensor, unsigned char row)
+{
+ 216:	e8 2f       	mov	r30, r24
+ 218:	f0 e0       	ldi	r31, 0x00	; 0
+ 21a:	ee 0f       	add	r30, r30
+ 21c:	ff 1f       	adc	r31, r31
+ 21e:	ee 0f       	add	r30, r30
+ 220:	ff 1f       	adc	r31, r31
+ 222:	e6 0f       	add	r30, r22
+ 224:	f1 1d       	adc	r31, r1
+ 226:	ed 59       	subi	r30, 0x9D	; 157
+ 228:	ff 4f       	sbci	r31, 0xFF	; 255
+	return measurements[sensor][row];
+}
+ 22a:	80 81       	ld	r24, Z
+ 22c:	08 95       	ret
+
+0000022e <set_measurements>:
+
+void set_measurements(unsigned char sensor, unsigned char row, unsigned char data)
+{
+	measurements[sensor][row] = data;
+ 22e:	e8 2f       	mov	r30, r24
+ 230:	f0 e0       	ldi	r31, 0x00	; 0
+ 232:	ee 0f       	add	r30, r30
+ 234:	ff 1f       	adc	r31, r31
+ 236:	ee 0f       	add	r30, r30
+ 238:	ff 1f       	adc	r31, r31
+ 23a:	e6 0f       	add	r30, r22
+ 23c:	f1 1d       	adc	r31, r1
+ 23e:	ed 59       	subi	r30, 0x9D	; 157
+ 240:	ff 4f       	sbci	r31, 0xFF	; 255
+ 242:	40 83       	st	Z, r20
+}
+ 244:	08 95       	ret
+
+00000246 <decide_side_wall>:
+
+unsigned char decide_side_wall()
+{
+	read_sensors();
+ 246:	0e 94 01 01 	call	0x202	; 0x202 <read_sensors>
+
+	//Vänta tills alla avläsningar är klara
+	while(mode != no_mode);
+ 24a:	80 91 62 00 	lds	r24, 0x0062
+ 24e:	88 23       	and	r24, r24
+ 250:	e1 f7       	brne	.-8      	; 0x24a <decide_side_wall+0x4>
+	
+	unsigned char i = 0;
+	unsigned char value = abs((get_measurements(0, 0) / 2) + (get_measurements(5, 0) / 2) - side_wall_dist_1);
+ 252:	90 91 63 00 	lds	r25, 0x0063
+ 256:	96 95       	lsr	r25
+ 258:	80 91 77 00 	lds	r24, 0x0077
+ 25c:	86 95       	lsr	r24
+ 25e:	28 2f       	mov	r18, r24
+ 260:	30 e0       	ldi	r19, 0x00	; 0
+ 262:	29 0f       	add	r18, r25
+ 264:	31 1d       	adc	r19, r1
+ 266:	20 55       	subi	r18, 0x50	; 80
+ 268:	30 40       	sbci	r19, 0x00	; 0
+ 26a:	37 ff       	sbrs	r19, 7
+ 26c:	03 c0       	rjmp	.+6      	; 0x274 <decide_side_wall+0x2e>
+ 26e:	30 95       	com	r19
+ 270:	21 95       	neg	r18
+ 272:	3f 4f       	sbci	r19, 0xFF	; 255
+ 274:	72 2f       	mov	r23, r18
+ 276:	e4 e6       	ldi	r30, 0x64	; 100
+ 278:	f0 e0       	ldi	r31, 0x00	; 0
+ 27a:	63 e0       	ldi	r22, 0x03	; 3
+ 27c:	51 e0       	ldi	r21, 0x01	; 1
+ 27e:	42 e0       	ldi	r20, 0x02	; 2
+	for(i = 0; i < 5; i++)
+	{
+		unsigned char temp;
+		temp = abs((get_measurements(i + 1, 1) / 2) + (get_measurements(i, 1) / 2) - side_wall_dist_1);
+		
+		if(temp < value)
+ 280:	a4 e0       	ldi	r26, 0x04	; 4
+	
+	//Då igenom alla sensorer
+	for(i = 0; i < 5; i++)
+	{
+		unsigned char temp;
+		temp = abs((get_measurements(i + 1, 1) / 2) + (get_measurements(i, 1) / 2) - side_wall_dist_1);
+ 282:	94 81       	ldd	r25, Z+4	; 0x04
+ 284:	96 95       	lsr	r25
+ 286:	80 81       	ld	r24, Z
+ 288:	86 95       	lsr	r24
+ 28a:	28 2f       	mov	r18, r24
+ 28c:	30 e0       	ldi	r19, 0x00	; 0
+ 28e:	29 0f       	add	r18, r25
+ 290:	31 1d       	adc	r19, r1
+ 292:	20 55       	subi	r18, 0x50	; 80
+ 294:	30 40       	sbci	r19, 0x00	; 0
+ 296:	37 ff       	sbrs	r19, 7
+ 298:	03 c0       	rjmp	.+6      	; 0x2a0 <decide_side_wall+0x5a>
+ 29a:	30 95       	com	r19
+ 29c:	21 95       	neg	r18
+ 29e:	3f 4f       	sbci	r19, 0xFF	; 255
+		
+		if(temp < value)
+ 2a0:	27 17       	cp	r18, r23
+ 2a2:	48 f4       	brcc	.+18     	; 0x2b6 <decide_side_wall+0x70>
+ 2a4:	5a 2f       	mov	r21, r26
+ 2a6:	54 1b       	sub	r21, r20
+			value = temp;
+
+			direction = i + 2;
+			//Sätter side_wall så att den matchar med det ben som pekar mot närmast parallella vägg
+			side_wall = 2 - i;
+			if (side_wall < 1)
+ 2a8:	44 23       	and	r20, r20
+ 2aa:	19 f0       	breq	.+6      	; 0x2b2 <decide_side_wall+0x6c>
+ 2ac:	72 2f       	mov	r23, r18
+ 2ae:	64 2f       	mov	r22, r20
+ 2b0:	02 c0       	rjmp	.+4      	; 0x2b6 <decide_side_wall+0x70>
+ 2b2:	72 2f       	mov	r23, r18
+ 2b4:	66 e0       	ldi	r22, 0x06	; 6
+ 2b6:	34 96       	adiw	r30, 0x04	; 4
+ 2b8:	41 50       	subi	r20, 0x01	; 1
+	unsigned char value = abs((get_measurements(0, 0) / 2) + (get_measurements(5, 0) / 2) - side_wall_dist_1);
+	direction = 1;
+	side_wall = 3;
+	
+	//Då igenom alla sensorer
+	for(i = 0; i < 5; i++)
+ 2ba:	4d 3f       	cpi	r20, 0xFD	; 253
+ 2bc:	11 f7       	brne	.-60     	; 0x282 <decide_side_wall+0x3c>
+ 2be:	60 93 7d 00 	sts	0x007D, r22
+ 2c2:	50 93 7e 00 	sts	0x007E, r21
+		
+		
+	}
+
+	//Som direction % 6
+	if(direction == 6)
+ 2c6:	56 30       	cpi	r21, 0x06	; 6
+ 2c8:	19 f4       	brne	.+6      	; 0x2d0 <decide_side_wall+0x8a>
+	{
+		direction -= 6;
+ 2ca:	10 92 7e 00 	sts	0x007E, r1
+ 2ce:	50 e0       	ldi	r21, 0x00	; 0
+		return 0;
+	}
+	return direction;	
+}
+ 2d0:	85 2f       	mov	r24, r21
+ 2d2:	08 95       	ret
+
+000002d4 <__vector_14>:
+
+
+
+ISR(ADC_vect)
+{
+ 2d4:	1f 92       	push	r1
+ 2d6:	0f 92       	push	r0
+ 2d8:	0f b6       	in	r0, 0x3f	; 63
+ 2da:	0f 92       	push	r0
+ 2dc:	11 24       	eor	r1, r1
+ 2de:	2f 93       	push	r18
+ 2e0:	8f 93       	push	r24
+ 2e2:	9f 93       	push	r25
+ 2e4:	ef 93       	push	r30
+ 2e6:	ff 93       	push	r31
+	
+	switch(mode)
+ 2e8:	80 91 62 00 	lds	r24, 0x0062
+ 2ec:	83 30       	cpi	r24, 0x03	; 3
+ 2ee:	41 f5       	brne	.+80     	; 0x340 <__vector_14+0x6c>
+	{	
+		case read_mode:
+		{
+			if(reads < max_number_reads)
+ 2f0:	20 91 7b 00 	lds	r18, 0x007B
+ 2f4:	24 30       	cpi	r18, 0x04	; 4
+ 2f6:	00 f5       	brcc	.+64     	; 0x338 <__vector_14+0x64>
+			{
+				unsigned char adc = ADCH;
+ 2f8:	85 b1       	in	r24, 0x05	; 5
+
+				set_measurements(adc_ch, reads, adc);
+ 2fa:	90 91 61 00 	lds	r25, 0x0061
+	return measurements[sensor][row];
+}
+
+void set_measurements(unsigned char sensor, unsigned char row, unsigned char data)
+{
+	measurements[sensor][row] = data;
+ 2fe:	e9 2f       	mov	r30, r25
+ 300:	f0 e0       	ldi	r31, 0x00	; 0
+ 302:	ee 0f       	add	r30, r30
+ 304:	ff 1f       	adc	r31, r31
+ 306:	ee 0f       	add	r30, r30
+ 308:	ff 1f       	adc	r31, r31
+ 30a:	e2 0f       	add	r30, r18
+ 30c:	f1 1d       	adc	r31, r1
+ 30e:	ed 59       	subi	r30, 0x9D	; 157
+ 310:	ff 4f       	sbci	r31, 0xFF	; 255
+ 312:	80 83       	st	Z, r24
+			{
+				unsigned char adc = ADCH;
+
+				set_measurements(adc_ch, reads, adc);
+
+				if(adc_ch < 6)
+ 314:	96 30       	cpi	r25, 0x06	; 6
+ 316:	30 f4       	brcc	.+12     	; 0x324 <__vector_14+0x50>
+				{
+					adc_ch += 1;
+ 318:	9f 5f       	subi	r25, 0xFF	; 255
+ 31a:	90 93 61 00 	sts	0x0061, r25
+					ADMUX += 1;
+ 31e:	87 b1       	in	r24, 0x07	; 7
+ 320:	8f 5f       	subi	r24, 0xFF	; 255
+ 322:	07 c0       	rjmp	.+14     	; 0x332 <__vector_14+0x5e>
+				}
+				else
+				{
+					reads += 1;
+ 324:	2f 5f       	subi	r18, 0xFF	; 255
+ 326:	20 93 7b 00 	sts	0x007B, r18
+					adc_ch = 0;
+ 32a:	10 92 61 00 	sts	0x0061, r1
+					ADMUX &= 0xE0;
+ 32e:	87 b1       	in	r24, 0x07	; 7
+ 330:	80 7e       	andi	r24, 0xE0	; 224
+ 332:	87 b9       	out	0x07, r24	; 7
+				}
+
+				ADCSRA |= (1 << ADSC);
+ 334:	36 9a       	sbi	0x06, 6	; 6
+ 336:	04 c0       	rjmp	.+8      	; 0x340 <__vector_14+0x6c>
+			}
+			else
+			{
+				reads = 0;
+ 338:	10 92 7b 00 	sts	0x007B, r1
+				mode = no_mode;
+ 33c:	10 92 62 00 	sts	0x0062, r1
+			}
+		break;
+		}
+	}
+} 
+ 340:	ff 91       	pop	r31
+ 342:	ef 91       	pop	r30
+ 344:	9f 91       	pop	r25
+ 346:	8f 91       	pop	r24
+ 348:	2f 91       	pop	r18
+ 34a:	0f 90       	pop	r0
+ 34c:	0f be       	out	0x3f, r0	; 63
+ 34e:	0f 90       	pop	r0
+ 350:	1f 90       	pop	r1
+ 352:	18 95       	reti
+
+00000354 <main>:
+#include <reglering.h>
+
+
+int main()
+{
+	TIMER0init();
+ 354:	0e 94 b4 01 	call	0x368	; 0x368 <TIMER0init>
+	ADCinit();
+ 358:	0e 94 f5 00 	call	0x1ea	; 0x1ea <ADCinit>
+	sei();
+ 35c:	78 94       	sei
+	read_sensors();
+ 35e:	0e 94 01 01 	call	0x202	; 0x202 <read_sensors>
+	
+	//for(int i= 0; i < 0xFFFF; i++);
+	TWIslave_init();
+ 362:	0e 94 3e 00 	call	0x7c	; 0x7c <TWIslave_init>
+ 366:	ff cf       	rjmp	.-2      	; 0x366 <main+0x12>
+
+00000368 <TIMER0init>:
+#include <adc.h>
+
+void TIMER0init()
+{
+	//ställ in timer-prescaler till clk/1024
+	TCCR0 |= (1<<CS00)|(1<<CS02);
+ 368:	83 b7       	in	r24, 0x33	; 51
+ 36a:	85 60       	ori	r24, 0x05	; 5
+ 36c:	83 bf       	out	0x33, r24	; 51
+
+	//enable interruptflagga ifall timern får
+	//overflow
+	TIMSK |= (1<<TOIE0);
+ 36e:	89 b7       	in	r24, 0x39	; 57
+ 370:	81 60       	ori	r24, 0x01	; 1
+ 372:	89 bf       	out	0x39, r24	; 57
+}
+ 374:	08 95       	ret
+
+00000376 <__vector_9>:
+
+ISR(TIMER0_OVF_vect)
+{
+ 376:	1f 92       	push	r1
+ 378:	0f 92       	push	r0
+ 37a:	0f b6       	in	r0, 0x3f	; 63
+ 37c:	0f 92       	push	r0
+ 37e:	11 24       	eor	r1, r1
+ 380:	2f 93       	push	r18
+ 382:	3f 93       	push	r19
+ 384:	4f 93       	push	r20
+ 386:	5f 93       	push	r21
+ 388:	6f 93       	push	r22
+ 38a:	7f 93       	push	r23
+ 38c:	8f 93       	push	r24
+ 38e:	9f 93       	push	r25
+ 390:	af 93       	push	r26
+ 392:	bf 93       	push	r27
+ 394:	ef 93       	push	r30
+ 396:	ff 93       	push	r31
+	read_sensors();
+ 398:	0e 94 01 01 	call	0x202	; 0x202 <read_sensors>
+
+}
+ 39c:	ff 91       	pop	r31
+ 39e:	ef 91       	pop	r30
+ 3a0:	bf 91       	pop	r27
+ 3a2:	af 91       	pop	r26
+ 3a4:	9f 91       	pop	r25
+ 3a6:	8f 91       	pop	r24
+ 3a8:	7f 91       	pop	r23
+ 3aa:	6f 91       	pop	r22
+ 3ac:	5f 91       	pop	r21
+ 3ae:	4f 91       	pop	r20
+ 3b0:	3f 91       	pop	r19
+ 3b2:	2f 91       	pop	r18
+ 3b4:	0f 90       	pop	r0
+ 3b6:	0f be       	out	0x3f, r0	; 63
+ 3b8:	0f 90       	pop	r0
+ 3ba:	1f 90       	pop	r1
+ 3bc:	18 95       	reti
+
+000003be <get_local_wall>:
+//De styrdata som ska skickas till styrenheten
+unsigned char movement_data[6];
+
+
+unsigned char get_local_wall(unsigned char x, unsigned char y)
+{
+ 3be:	90 e0       	ldi	r25, 0x00	; 0
+ 3c0:	fc 01       	movw	r30, r24
+ 3c2:	ee 0f       	add	r30, r30
+ 3c4:	ff 1f       	adc	r31, r31
+ 3c6:	e8 0f       	add	r30, r24
+ 3c8:	f9 1f       	adc	r31, r25
+ 3ca:	e6 0f       	add	r30, r22
+ 3cc:	f1 1d       	adc	r31, r1
+ 3ce:	e3 57       	subi	r30, 0x73	; 115
+ 3d0:	ff 4f       	sbci	r31, 0xFF	; 255
+	return local_walls[x][y];
+}
+ 3d2:	80 81       	ld	r24, Z
+ 3d4:	08 95       	ret
+
+000003d6 <set_local_wall>:
+unsigned char movement_data[6];
+
+
+unsigned char get_local_wall(unsigned char x, unsigned char y)
+{
+	return local_walls[x][y];
+ 3d6:	26 2f       	mov	r18, r22
+ 3d8:	22 95       	swap	r18
+ 3da:	2f 70       	andi	r18, 0x0F	; 15
+ 3dc:	30 e0       	ldi	r19, 0x00	; 0
+ 3de:	6f 70       	andi	r22, 0x0F	; 15
+ 3e0:	f9 01       	movw	r30, r18
+ 3e2:	ee 0f       	add	r30, r30
+ 3e4:	ff 1f       	adc	r31, r31
+ 3e6:	e2 0f       	add	r30, r18
+ 3e8:	f3 1f       	adc	r31, r19
+ 3ea:	e6 0f       	add	r30, r22
+ 3ec:	f1 1d       	adc	r31, r1
+ 3ee:	e3 57       	subi	r30, 0x73	; 115
+ 3f0:	ff 4f       	sbci	r31, 0xFF	; 255
+ 3f2:	90 81       	ld	r25, Z
+	unsigned char x = (pos & 0xF0) >> 4;
+	unsigned char y = (pos & 0x0F);
+
+	unsigned char temp = get_local_wall(x,y);
+	temp |= wall;
+	local_walls[x][y] = temp;
+ 3f4:	98 2b       	or	r25, r24
+ 3f6:	90 83       	st	Z, r25
+}
+ 3f8:	08 95       	ret
+
+000003fa <get_local_searched>:
+
+unsigned char get_local_searched(unsigned char x, unsigned char y)
+{
+ 3fa:	90 e0       	ldi	r25, 0x00	; 0
+ 3fc:	fc 01       	movw	r30, r24
+ 3fe:	ee 0f       	add	r30, r30
+ 400:	ff 1f       	adc	r31, r31
+ 402:	e8 0f       	add	r30, r24
+ 404:	f9 1f       	adc	r31, r25
+ 406:	e6 0f       	add	r30, r22
+ 408:	f1 1d       	adc	r31, r1
+ 40a:	ea 56       	subi	r30, 0x6A	; 106
+ 40c:	ff 4f       	sbci	r31, 0xFF	; 255
+	return local_searched[x][y];
+}
+ 40e:	80 81       	ld	r24, Z
+ 410:	08 95       	ret
+
+00000412 <set_local_searched>:
+	local_walls[x][y] = temp;
+}
+
+unsigned char get_local_searched(unsigned char x, unsigned char y)
+{
+	return local_searched[x][y];
+ 412:	26 2f       	mov	r18, r22
+ 414:	22 95       	swap	r18
+ 416:	2f 70       	andi	r18, 0x0F	; 15
+ 418:	30 e0       	ldi	r19, 0x00	; 0
+ 41a:	6f 70       	andi	r22, 0x0F	; 15
+ 41c:	f9 01       	movw	r30, r18
+ 41e:	ee 0f       	add	r30, r30
+ 420:	ff 1f       	adc	r31, r31
+ 422:	e2 0f       	add	r30, r18
+ 424:	f3 1f       	adc	r31, r19
+ 426:	e6 0f       	add	r30, r22
+ 428:	f1 1d       	adc	r31, r1
+ 42a:	ea 56       	subi	r30, 0x6A	; 106
+ 42c:	ff 4f       	sbci	r31, 0xFF	; 255
+ 42e:	90 81       	ld	r25, Z
+	unsigned char x = (pos & 0xF0) >> 4;
+	unsigned char y = (pos & 0x0F);
+
+	unsigned char temp = get_local_searched(x,y);
+	temp |= wall;
+	local_searched[x][y] = temp;
+ 430:	98 2b       	or	r25, r24
+ 432:	90 83       	st	Z, r25
+}
+ 434:	08 95       	ret
+
+00000436 <modulo_6>:
+
+unsigned char modulo_6(unsigned char value)
+{
+	if (value > 5)
+ 436:	86 30       	cpi	r24, 0x06	; 6
+ 438:	08 f0       	brcs	.+2      	; 0x43c <modulo_6+0x6>
+	{
+		value -= 6;
+ 43a:	86 50       	subi	r24, 0x06	; 6
+	}
+	return value;
+}
+ 43c:	08 95       	ret
+
+0000043e <look_for_front_wall>:
+
+void look_for_front_wall(unsigned char front)
+{
+ 43e:	98 2f       	mov	r25, r24
+	if((front < (wall_dist_1 + marginal)) && (front > (wall_dist_1 - marginal)))
+ 440:	80 55       	subi	r24, 0x50	; 80
+ 442:	83 31       	cpi	r24, 0x13	; 19
+ 444:	58 f4       	brcc	.+22     	; 0x45c <look_for_front_wall+0x1e>
+unsigned char movement_data[6];
+
+
+unsigned char get_local_wall(unsigned char x, unsigned char y)
+{
+	return local_walls[x][y];
+ 446:	80 91 91 00 	lds	r24, 0x0091
+	unsigned char x = (pos & 0xF0) >> 4;
+	unsigned char y = (pos & 0x0F);
+
+	unsigned char temp = get_local_wall(x,y);
+	temp |= wall;
+	local_walls[x][y] = temp;
+ 44a:	84 60       	ori	r24, 0x04	; 4
+ 44c:	80 93 91 00 	sts	0x0091, r24
+}
+
+unsigned char get_local_searched(unsigned char x, unsigned char y)
+{
+	return local_searched[x][y];
+ 450:	80 91 9a 00 	lds	r24, 0x009A
+	unsigned char x = (pos & 0xF0) >> 4;
+	unsigned char y = (pos & 0x0F);
+
+	unsigned char temp = get_local_searched(x,y);
+	temp |= wall;
+	local_searched[x][y] = temp;
+ 454:	84 60       	ori	r24, 0x04	; 4
+ 456:	80 93 9a 00 	sts	0x009A, r24
+ 45a:	08 95       	ret
+	if((front < (wall_dist_1 + marginal)) && (front > (wall_dist_1 - marginal)))
+	{
+		set_local_wall(wall_f,0x11);
+		set_local_searched(wall_f,0x11);
+	}
+	else if((front < (wall_dist_2 + marginal)) && (front > (wall_dist_2 - marginal)))
+ 45c:	97 54       	subi	r25, 0x47	; 71
+ 45e:	93 31       	cpi	r25, 0x13	; 19
+ 460:	28 f4       	brcc	.+10     	; 0x46c <__stack+0xd>
+unsigned char movement_data[6];
+
+
+unsigned char get_local_wall(unsigned char x, unsigned char y)
+{
+	return local_walls[x][y];
+ 462:	80 91 92 00 	lds	r24, 0x0092
+	unsigned char x = (pos & 0xF0) >> 4;
+	unsigned char y = (pos & 0x0F);
+
+	unsigned char temp = get_local_wall(x,y);
+	temp |= wall;
+	local_walls[x][y] = temp;
+ 466:	84 60       	ori	r24, 0x04	; 4
+ 468:	80 93 92 00 	sts	0x0092, r24
+}
+
+unsigned char get_local_searched(unsigned char x, unsigned char y)
+{
+	return local_searched[x][y];
+ 46c:	80 91 9a 00 	lds	r24, 0x009A
+	unsigned char x = (pos & 0xF0) >> 4;
+	unsigned char y = (pos & 0x0F);
+
+	unsigned char temp = get_local_searched(x,y);
+	temp |= wall;
+	local_searched[x][y] = temp;
+ 470:	84 60       	ori	r24, 0x04	; 4
+ 472:	80 93 9a 00 	sts	0x009A, r24
+	local_walls[x][y] = temp;
+}
+
+unsigned char get_local_searched(unsigned char x, unsigned char y)
+{
+	return local_searched[x][y];
+ 476:	80 91 9b 00 	lds	r24, 0x009B
+	unsigned char x = (pos & 0xF0) >> 4;
+	unsigned char y = (pos & 0x0F);
+
+	unsigned char temp = get_local_searched(x,y);
+	temp |= wall;
+	local_searched[x][y] = temp;
+ 47a:	84 60       	ori	r24, 0x04	; 4
+ 47c:	80 93 9b 00 	sts	0x009B, r24
+ 480:	08 95       	ret
+
+00000482 <look_for_left_wall>:
+	}
+}
+
+void look_for_left_wall(unsigned char left_1, unsigned char left_2)
+{
+	if(((left_1 < (side_wall_dist_1 + marginal)) && (left_1 > (side_wall_dist_1 - marginal)))
+ 482:	87 54       	subi	r24, 0x47	; 71
+ 484:	83 31       	cpi	r24, 0x13	; 19
+ 486:	80 f4       	brcc	.+32     	; 0x4a8 <look_for_left_wall+0x26>
+ 488:	86 2f       	mov	r24, r22
+ 48a:	87 54       	subi	r24, 0x47	; 71
+ 48c:	83 31       	cpi	r24, 0x13	; 19
+ 48e:	30 f4       	brcc	.+12     	; 0x49c <look_for_left_wall+0x1a>
+unsigned char movement_data[6];
+
+
+unsigned char get_local_wall(unsigned char x, unsigned char y)
+{
+	return local_walls[x][y];
+ 490:	80 91 91 00 	lds	r24, 0x0091
+	unsigned char x = (pos & 0xF0) >> 4;
+	unsigned char y = (pos & 0x0F);
+
+	unsigned char temp = get_local_wall(x,y);
+	temp |= wall;
+	local_walls[x][y] = temp;
+ 494:	88 60       	ori	r24, 0x08	; 8
+ 496:	80 93 91 00 	sts	0x0091, r24
+ 49a:	28 c0       	rjmp	.+80     	; 0x4ec <look_for_left_wall+0x6a>
+unsigned char movement_data[6];
+
+
+unsigned char get_local_wall(unsigned char x, unsigned char y)
+{
+	return local_walls[x][y];
+ 49c:	80 91 8e 00 	lds	r24, 0x008E
+	unsigned char x = (pos & 0xF0) >> 4;
+	unsigned char y = (pos & 0x0F);
+
+	unsigned char temp = get_local_wall(x,y);
+	temp |= wall;
+	local_walls[x][y] = temp;
+ 4a0:	84 60       	ori	r24, 0x04	; 4
+ 4a2:	80 93 8e 00 	sts	0x008E, r24
+ 4a6:	05 c0       	rjmp	.+10     	; 0x4b2 <look_for_left_wall+0x30>
+}
+
+unsigned char get_local_searched(unsigned char x, unsigned char y)
+{
+	return local_searched[x][y];
+ 4a8:	80 91 98 00 	lds	r24, 0x0098
+	unsigned char x = (pos & 0xF0) >> 4;
+	unsigned char y = (pos & 0x0F);
+
+	unsigned char temp = get_local_searched(x,y);
+	temp |= wall;
+	local_searched[x][y] = temp;
+ 4ac:	88 60       	ori	r24, 0x08	; 8
+ 4ae:	80 93 98 00 	sts	0x0098, r24
+	local_walls[x][y] = temp;
+}
+
+unsigned char get_local_searched(unsigned char x, unsigned char y)
+{
+	return local_searched[x][y];
+ 4b2:	80 91 97 00 	lds	r24, 0x0097
+	unsigned char x = (pos & 0xF0) >> 4;
+	unsigned char y = (pos & 0x0F);
+
+	unsigned char temp = get_local_searched(x,y);
+	temp |= wall;
+	local_searched[x][y] = temp;
+ 4b6:	84 60       	ori	r24, 0x04	; 4
+ 4b8:	80 93 97 00 	sts	0x0097, r24
+	local_walls[x][y] = temp;
+}
+
+unsigned char get_local_searched(unsigned char x, unsigned char y)
+{
+	return local_searched[x][y];
+ 4bc:	80 91 9a 00 	lds	r24, 0x009A
+	unsigned char x = (pos & 0xF0) >> 4;
+	unsigned char y = (pos & 0x0F);
+
+	unsigned char temp = get_local_searched(x,y);
+	temp |= wall;
+	local_searched[x][y] = temp;
+ 4c0:	88 60       	ori	r24, 0x08	; 8
+ 4c2:	80 93 9a 00 	sts	0x009A, r24
+			set_local_searched(wall_l,0x02);
+			set_local_searched(wall_f,0x01);
+			set_local_searched(wall_l,0x11);
+		}
+				
+		if((left_2 < (wall_dist_3 + marginal)) && (left_2 > (wall_dist_3 - marginal)))
+ 4c6:	67 54       	subi	r22, 0x47	; 71
+ 4c8:	63 31       	cpi	r22, 0x13	; 19
+ 4ca:	30 f4       	brcc	.+12     	; 0x4d8 <look_for_left_wall+0x56>
+unsigned char movement_data[6];
+
+
+unsigned char get_local_wall(unsigned char x, unsigned char y)
+{
+	return local_walls[x][y];
+ 4cc:	80 91 8e 00 	lds	r24, 0x008E
+	unsigned char x = (pos & 0xF0) >> 4;
+	unsigned char y = (pos & 0x0F);
+
+	unsigned char temp = get_local_wall(x,y);
+	temp |= wall;
+	local_walls[x][y] = temp;
+ 4d0:	81 60       	ori	r24, 0x01	; 1
+ 4d2:	80 93 8e 00 	sts	0x008E, r24
+ 4d6:	05 c0       	rjmp	.+10     	; 0x4e2 <look_for_left_wall+0x60>
+}
+
+unsigned char get_local_searched(unsigned char x, unsigned char y)
+{
+	return local_searched[x][y];
+ 4d8:	80 91 96 00 	lds	r24, 0x0096
+	unsigned char x = (pos & 0xF0) >> 4;
+	unsigned char y = (pos & 0x0F);
+
+	unsigned char temp = get_local_searched(x,y);
+	temp |= wall;
+	local_searched[x][y] = temp;
+ 4dc:	88 60       	ori	r24, 0x08	; 8
+ 4de:	80 93 96 00 	sts	0x0096, r24
+	local_walls[x][y] = temp;
+}
+
+unsigned char get_local_searched(unsigned char x, unsigned char y)
+{
+	return local_searched[x][y];
+ 4e2:	80 91 97 00 	lds	r24, 0x0097
+	unsigned char x = (pos & 0xF0) >> 4;
+	unsigned char y = (pos & 0x0F);
+
+	unsigned char temp = get_local_searched(x,y);
+	temp |= wall;
+	local_searched[x][y] = temp;
+ 4e6:	81 60       	ori	r24, 0x01	; 1
+ 4e8:	80 93 97 00 	sts	0x0097, r24
+	local_walls[x][y] = temp;
+}
+
+unsigned char get_local_searched(unsigned char x, unsigned char y)
+{
+	return local_searched[x][y];
+ 4ec:	80 91 9a 00 	lds	r24, 0x009A
+	unsigned char x = (pos & 0xF0) >> 4;
+	unsigned char y = (pos & 0x0F);
+
+	unsigned char temp = get_local_searched(x,y);
+	temp |= wall;
+	local_searched[x][y] = temp;
+ 4f0:	88 60       	ori	r24, 0x08	; 8
+ 4f2:	80 93 9a 00 	sts	0x009A, r24
+ 4f6:	08 95       	ret
+
+000004f8 <look_for_back_wall>:
+		}
+	}
+}
+
+void look_for_back_wall(unsigned char back)
+{
+ 4f8:	98 2f       	mov	r25, r24
+	if((back < (wall_dist_1 + marginal)) && (back > (wall_dist_1 - marginal)))
+ 4fa:	80 55       	subi	r24, 0x50	; 80
+ 4fc:	83 31       	cpi	r24, 0x13	; 19
+ 4fe:	58 f4       	brcc	.+22     	; 0x516 <look_for_back_wall+0x1e>
+unsigned char movement_data[6];
+
+
+unsigned char get_local_wall(unsigned char x, unsigned char y)
+{
+	return local_walls[x][y];
+ 500:	80 91 91 00 	lds	r24, 0x0091
+	unsigned char x = (pos & 0xF0) >> 4;
+	unsigned char y = (pos & 0x0F);
+
+	unsigned char temp = get_local_wall(x,y);
+	temp |= wall;
+	local_walls[x][y] = temp;
+ 504:	81 60       	ori	r24, 0x01	; 1
+ 506:	80 93 91 00 	sts	0x0091, r24
+}
+
+unsigned char get_local_searched(unsigned char x, unsigned char y)
+{
+	return local_searched[x][y];
+ 50a:	80 91 9a 00 	lds	r24, 0x009A
+	unsigned char x = (pos & 0xF0) >> 4;
+	unsigned char y = (pos & 0x0F);
+
+	unsigned char temp = get_local_searched(x,y);
+	temp |= wall;
+	local_searched[x][y] = temp;
+ 50e:	81 60       	ori	r24, 0x01	; 1
+ 510:	80 93 9a 00 	sts	0x009A, r24
+ 514:	08 95       	ret
+	if((back < (wall_dist_1 + marginal)) && (back > (wall_dist_1 - marginal)))
+	{
+		set_local_wall(wall_b,0x11);
+		set_local_searched(wall_b,0x11);
+	}
+	else if((back < (wall_dist_2 + marginal)) && (back > (wall_dist_2 - marginal)))
+ 516:	97 54       	subi	r25, 0x47	; 71
+ 518:	93 31       	cpi	r25, 0x13	; 19
+ 51a:	78 f4       	brcc	.+30     	; 0x53a <look_for_back_wall+0x42>
+unsigned char movement_data[6];
+
+
+unsigned char get_local_wall(unsigned char x, unsigned char y)
+{
+	return local_walls[x][y];
+ 51c:	80 91 90 00 	lds	r24, 0x0090
+	unsigned char x = (pos & 0xF0) >> 4;
+	unsigned char y = (pos & 0x0F);
+
+	unsigned char temp = get_local_wall(x,y);
+	temp |= wall;
+	local_walls[x][y] = temp;
+ 520:	81 60       	ori	r24, 0x01	; 1
+ 522:	80 93 90 00 	sts	0x0090, r24
+}
+
+unsigned char get_local_searched(unsigned char x, unsigned char y)
+{
+	return local_searched[x][y];
+ 526:	80 91 99 00 	lds	r24, 0x0099
+	unsigned char x = (pos & 0xF0) >> 4;
+	unsigned char y = (pos & 0x0F);
+
+	unsigned char temp = get_local_searched(x,y);
+	temp |= wall;
+	local_searched[x][y] = temp;
+ 52a:	81 60       	ori	r24, 0x01	; 1
+ 52c:	80 93 99 00 	sts	0x0099, r24
+	local_walls[x][y] = temp;
+}
+
+unsigned char get_local_searched(unsigned char x, unsigned char y)
+{
+	return local_searched[x][y];
+ 530:	80 91 9a 00 	lds	r24, 0x009A
+	unsigned char x = (pos & 0xF0) >> 4;
+	unsigned char y = (pos & 0x0F);
+
+	unsigned char temp = get_local_searched(x,y);
+	temp |= wall;
+	local_searched[x][y] = temp;
+ 534:	81 60       	ori	r24, 0x01	; 1
+ 536:	80 93 9a 00 	sts	0x009A, r24
+ 53a:	08 95       	ret
+
+0000053c <look_for_right_wall>:
+ }
+
+void look_for_right_wall(unsigned char right_1, unsigned char right_2)
+{
+
+	if(((right_1 < (side_wall_dist_1 + marginal)) && (right_1 > (side_wall_dist_1 - marginal)))
+ 53c:	87 54       	subi	r24, 0x47	; 71
+ 53e:	83 31       	cpi	r24, 0x13	; 19
+ 540:	80 f4       	brcc	.+32     	; 0x562 <look_for_right_wall+0x26>
+ 542:	86 2f       	mov	r24, r22
+ 544:	87 54       	subi	r24, 0x47	; 71
+ 546:	83 31       	cpi	r24, 0x13	; 19
+ 548:	30 f4       	brcc	.+12     	; 0x556 <look_for_right_wall+0x1a>
+unsigned char movement_data[6];
+
+
+unsigned char get_local_wall(unsigned char x, unsigned char y)
+{
+	return local_walls[x][y];
+ 54a:	80 91 91 00 	lds	r24, 0x0091
+	unsigned char x = (pos & 0xF0) >> 4;
+	unsigned char y = (pos & 0x0F);
+
+	unsigned char temp = get_local_wall(x,y);
+	temp |= wall;
+	local_walls[x][y] = temp;
+ 54e:	82 60       	ori	r24, 0x02	; 2
+ 550:	80 93 91 00 	sts	0x0091, r24
+ 554:	28 c0       	rjmp	.+80     	; 0x5a6 <look_for_right_wall+0x6a>
+unsigned char movement_data[6];
+
+
+unsigned char get_local_wall(unsigned char x, unsigned char y)
+{
+	return local_walls[x][y];
+ 556:	80 91 94 00 	lds	r24, 0x0094
+	unsigned char x = (pos & 0xF0) >> 4;
+	unsigned char y = (pos & 0x0F);
+
+	unsigned char temp = get_local_wall(x,y);
+	temp |= wall;
+	local_walls[x][y] = temp;
+ 55a:	81 60       	ori	r24, 0x01	; 1
+ 55c:	80 93 94 00 	sts	0x0094, r24
+ 560:	05 c0       	rjmp	.+10     	; 0x56c <look_for_right_wall+0x30>
+}
+
+unsigned char get_local_searched(unsigned char x, unsigned char y)
+{
+	return local_searched[x][y];
+ 562:	80 91 9c 00 	lds	r24, 0x009C
+	unsigned char x = (pos & 0xF0) >> 4;
+	unsigned char y = (pos & 0x0F);
+
+	unsigned char temp = get_local_searched(x,y);
+	temp |= wall;
+	local_searched[x][y] = temp;
+ 566:	82 60       	ori	r24, 0x02	; 2
+ 568:	80 93 9c 00 	sts	0x009C, r24
+	local_walls[x][y] = temp;
+}
+
+unsigned char get_local_searched(unsigned char x, unsigned char y)
+{
+	return local_searched[x][y];
+ 56c:	80 91 9d 00 	lds	r24, 0x009D
+	unsigned char x = (pos & 0xF0) >> 4;
+	unsigned char y = (pos & 0x0F);
+
+	unsigned char temp = get_local_searched(x,y);
+	temp |= wall;
+	local_searched[x][y] = temp;
+ 570:	81 60       	ori	r24, 0x01	; 1
+ 572:	80 93 9d 00 	sts	0x009D, r24
+	local_walls[x][y] = temp;
+}
+
+unsigned char get_local_searched(unsigned char x, unsigned char y)
+{
+	return local_searched[x][y];
+ 576:	80 91 9a 00 	lds	r24, 0x009A
+	unsigned char x = (pos & 0xF0) >> 4;
+	unsigned char y = (pos & 0x0F);
+
+	unsigned char temp = get_local_searched(x,y);
+	temp |= wall;
+	local_searched[x][y] = temp;
+ 57a:	82 60       	ori	r24, 0x02	; 2
+ 57c:	80 93 9a 00 	sts	0x009A, r24
+			set_local_searched(wall_r,0x20);
+			set_local_searched(wall_b,0x21);
+			set_local_searched(wall_r,0x11);
+		}
+		
+		if((right_2 < (wall_dist_3 + marginal)) && (right_2 > (wall_dist_3 - marginal)))
+ 580:	67 54       	subi	r22, 0x47	; 71
+ 582:	63 31       	cpi	r22, 0x13	; 19
+ 584:	30 f4       	brcc	.+12     	; 0x592 <look_for_right_wall+0x56>
+unsigned char movement_data[6];
+
+
+unsigned char get_local_wall(unsigned char x, unsigned char y)
+{
+	return local_walls[x][y];
+ 586:	80 91 94 00 	lds	r24, 0x0094
+	unsigned char x = (pos & 0xF0) >> 4;
+	unsigned char y = (pos & 0x0F);
+
+	unsigned char temp = get_local_wall(x,y);
+	temp |= wall;
+	local_walls[x][y] = temp;
+ 58a:	84 60       	ori	r24, 0x04	; 4
+ 58c:	80 93 94 00 	sts	0x0094, r24
+ 590:	05 c0       	rjmp	.+10     	; 0x59c <look_for_right_wall+0x60>
+}
+
+unsigned char get_local_searched(unsigned char x, unsigned char y)
+{
+	return local_searched[x][y];
+ 592:	80 91 9e 00 	lds	r24, 0x009E
+	unsigned char x = (pos & 0xF0) >> 4;
+	unsigned char y = (pos & 0x0F);
+
+	unsigned char temp = get_local_searched(x,y);
+	temp |= wall;
+	local_searched[x][y] = temp;
+ 596:	82 60       	ori	r24, 0x02	; 2
+ 598:	80 93 9e 00 	sts	0x009E, r24
+	local_walls[x][y] = temp;
+}
+
+unsigned char get_local_searched(unsigned char x, unsigned char y)
+{
+	return local_searched[x][y];
+ 59c:	80 91 9d 00 	lds	r24, 0x009D
+	unsigned char x = (pos & 0xF0) >> 4;
+	unsigned char y = (pos & 0x0F);
+
+	unsigned char temp = get_local_searched(x,y);
+	temp |= wall;
+	local_searched[x][y] = temp;
+ 5a0:	84 60       	ori	r24, 0x04	; 4
+ 5a2:	80 93 9d 00 	sts	0x009D, r24
+	local_walls[x][y] = temp;
+}
+
+unsigned char get_local_searched(unsigned char x, unsigned char y)
+{
+	return local_searched[x][y];
+ 5a6:	80 91 9a 00 	lds	r24, 0x009A
+	unsigned char x = (pos & 0xF0) >> 4;
+	unsigned char y = (pos & 0x0F);
+
+	unsigned char temp = get_local_searched(x,y);
+	temp |= wall;
+	local_searched[x][y] = temp;
+ 5aa:	82 60       	ori	r24, 0x02	; 2
+ 5ac:	80 93 9a 00 	sts	0x009A, r24
+ 5b0:	08 95       	ret
+
+000005b2 <reglera>:
+		reglering = 0;
+	}
+
+	
+	//Ska skicka regleringen till styrenheten
+	movement_data[0] = 0; //Skicka bitar som säger att det är regleringen som ska skickas
+ 5b2:	10 92 87 00 	sts	0x0087, r1
+	movement_data[1] = reglering;
+ 5b6:	10 92 88 00 	sts	0x0088, r1
+	//Kan vi skicka reglering om det är ett negativt värde, hur löser man detta?
+}
+ 5ba:	08 95       	ret
+
+000005bc <start_up_routine>:
+//Funktion som körs endast när roboten sätts igång
+
+void start_up_routine()
+{
+	//Denna behöver endast göras en gång. Sedan ges sidoväggen av hur den rör sig.
+	decide_side_wall();
+ 5bc:	0e 94 23 01 	call	0x246	; 0x246 <decide_side_wall>
+}
+ 5c0:	08 95       	ret
+
+000005c2 <look_for_walls>:
+//Funktionen förutsätter att measurements[][] på rad 0 innehåller de data som skall utvärderas
+//Funktionen kräver även mer eller mindre att man befinner sig mitt en den ruta man vill mäta
+//annars krävs en större marginal krävas vilket skulle kunne leda till att vissa väggars 
+//intervall överlappar. Det är 34 cm mellan side_wall_dist_1 och wall_dist_3 vilka är de mest kritiska
+void look_for_walls()
+{
+ 5c2:	0f 93       	push	r16
+ 5c4:	1f 93       	push	r17
+	read_sensors();
+ 5c6:	0e 94 01 01 	call	0x202	; 0x202 <read_sensors>
+
+	unsigned char sensor_index = direction;
+ 5ca:	10 91 7e 00 	lds	r17, 0x007E
+	//FRONT
+	unsigned char front = get_measurements(sensor_index, 0);
+ 5ce:	81 2f       	mov	r24, r17
+ 5d0:	60 e0       	ldi	r22, 0x00	; 0
+ 5d2:	0e 94 0b 01 	call	0x216	; 0x216 <get_measurements>
+	look_for_front_wall(front);
+ 5d6:	0e 94 1f 02 	call	0x43e	; 0x43e <look_for_front_wall>
+
+	//LEFT
+	sensor_index += sensor_index;
+ 5da:	11 0f       	add	r17, r17
+	local_searched[x][y] = temp;
+}
+
+unsigned char modulo_6(unsigned char value)
+{
+	if (value > 5)
+ 5dc:	16 30       	cpi	r17, 0x06	; 6
+ 5de:	08 f0       	brcs	.+2      	; 0x5e2 <look_for_walls+0x20>
+	{
+		value -= 6;
+ 5e0:	16 50       	subi	r17, 0x06	; 6
+	look_for_front_wall(front);
+
+	//LEFT
+	sensor_index += sensor_index;
+	sensor_index = modulo_6(sensor_index);
+	unsigned char left_1 = get_measurements(sensor_index, 0);
+ 5e2:	81 2f       	mov	r24, r17
+ 5e4:	60 e0       	ldi	r22, 0x00	; 0
+ 5e6:	0e 94 0b 01 	call	0x216	; 0x216 <get_measurements>
+ 5ea:	08 2f       	mov	r16, r24
+	sensor_index += sensor_index;
+ 5ec:	11 0f       	add	r17, r17
+	local_searched[x][y] = temp;
+}
+
+unsigned char modulo_6(unsigned char value)
+{
+	if (value > 5)
+ 5ee:	16 30       	cpi	r17, 0x06	; 6
+ 5f0:	08 f0       	brcs	.+2      	; 0x5f4 <look_for_walls+0x32>
+	{
+		value -= 6;
+ 5f2:	16 50       	subi	r17, 0x06	; 6
+	sensor_index += sensor_index;
+	sensor_index = modulo_6(sensor_index);
+	unsigned char left_1 = get_measurements(sensor_index, 0);
+	sensor_index += sensor_index;
+	sensor_index = modulo_6(sensor_index);
+	unsigned char left_2 = get_measurements(sensor_index, 0);
+ 5f4:	81 2f       	mov	r24, r17
+ 5f6:	60 e0       	ldi	r22, 0x00	; 0
+ 5f8:	0e 94 0b 01 	call	0x216	; 0x216 <get_measurements>
+ 5fc:	68 2f       	mov	r22, r24
+	look_for_left_wall(left_1, left_2);	
+ 5fe:	80 2f       	mov	r24, r16
+ 600:	0e 94 41 02 	call	0x482	; 0x482 <look_for_left_wall>
+
+	//BACK
+	sensor_index += sensor_index;
+ 604:	11 0f       	add	r17, r17
+	local_searched[x][y] = temp;
+}
+
+unsigned char modulo_6(unsigned char value)
+{
+	if (value > 5)
+ 606:	16 30       	cpi	r17, 0x06	; 6
+ 608:	08 f0       	brcs	.+2      	; 0x60c <look_for_walls+0x4a>
+	{
+		value -= 6;
+ 60a:	16 50       	subi	r17, 0x06	; 6
+	look_for_left_wall(left_1, left_2);	
+
+	//BACK
+	sensor_index += sensor_index;
+	sensor_index = modulo_6(sensor_index);
+	unsigned char back = get_measurements(sensor_index, 0);
+ 60c:	81 2f       	mov	r24, r17
+ 60e:	60 e0       	ldi	r22, 0x00	; 0
+ 610:	0e 94 0b 01 	call	0x216	; 0x216 <get_measurements>
+	look_for_back_wall(back);
+ 614:	0e 94 7c 02 	call	0x4f8	; 0x4f8 <look_for_back_wall>
+
+	//RIGHT
+	sensor_index += sensor_index;
+ 618:	11 0f       	add	r17, r17
+	local_searched[x][y] = temp;
+}
+
+unsigned char modulo_6(unsigned char value)
+{
+	if (value > 5)
+ 61a:	16 30       	cpi	r17, 0x06	; 6
+ 61c:	08 f0       	brcs	.+2      	; 0x620 <look_for_walls+0x5e>
+	{
+		value -= 6;
+ 61e:	16 50       	subi	r17, 0x06	; 6
+	look_for_back_wall(back);
+
+	//RIGHT
+	sensor_index += sensor_index;
+	sensor_index = modulo_6(sensor_index);
+	unsigned char right_1 = get_measurements(sensor_index, 0);
+ 620:	81 2f       	mov	r24, r17
+ 622:	60 e0       	ldi	r22, 0x00	; 0
+ 624:	0e 94 0b 01 	call	0x216	; 0x216 <get_measurements>
+ 628:	08 2f       	mov	r16, r24
+	sensor_index += sensor_index;
+ 62a:	81 2f       	mov	r24, r17
+ 62c:	88 0f       	add	r24, r24
+	local_searched[x][y] = temp;
+}
+
+unsigned char modulo_6(unsigned char value)
+{
+	if (value > 5)
+ 62e:	86 30       	cpi	r24, 0x06	; 6
+ 630:	08 f0       	brcs	.+2      	; 0x634 <look_for_walls+0x72>
+	{
+		value -= 6;
+ 632:	86 50       	subi	r24, 0x06	; 6
+	sensor_index += sensor_index;
+	sensor_index = modulo_6(sensor_index);
+	unsigned char right_1 = get_measurements(sensor_index, 0);
+	sensor_index += sensor_index;
+	sensor_index = modulo_6(sensor_index);
+	unsigned char right_2 = get_measurements(sensor_index, 0);
+ 634:	60 e0       	ldi	r22, 0x00	; 0
+ 636:	0e 94 0b 01 	call	0x216	; 0x216 <get_measurements>
+ 63a:	68 2f       	mov	r22, r24
+	look_for_right_wall(right_1, right_2);
+ 63c:	80 2f       	mov	r24, r16
+ 63e:	0e 94 9e 02 	call	0x53c	; 0x53c <look_for_right_wall>
+
+	//Skicka inte skiten till Svante här
+	//Vänta tills roboten har tänkt lite på de eventuella luckor 
+	//den kan täppa till med lite tankekraft			
+}
+ 642:	1f 91       	pop	r17
+ 644:	0f 91       	pop	r16
+ 646:	08 95       	ret
+
+00000648 <movement_direction>:
+}
+	 
+//Funktion som säger hur roboten skall rör sig.
+void movement_direction()
+{
+	look_for_walls();
+ 648:	0e 94 e1 02 	call	0x5c2	; 0x5c2 <look_for_walls>
+	
+	//Kolla om vi har en vägg till höger
+	if((get_local_wall(1,1) & 0b0010) >> 1)
+ 64c:	80 91 91 00 	lds	r24, 0x0091
+ 650:	90 e0       	ldi	r25, 0x00	; 0
+ 652:	9c 01       	movw	r18, r24
+ 654:	24 70       	andi	r18, 0x04	; 4
+ 656:	30 70       	andi	r19, 0x00	; 0
+ 658:	81 ff       	sbrs	r24, 1
+ 65a:	07 c0       	rjmp	.+14     	; 0x66a <movement_direction+0x22>
+	{
+		//Kolla om det finns en vägg framör näsan
+		if ((get_local_wall(1,1) & 0b0100) >> 2)
+ 65c:	23 2b       	or	r18, r19
+ 65e:	39 f4       	brne	.+14     	; 0x66e <movement_direction+0x26>
+
+			//inte tillräckligt med info för att bestämma 
+			}
+		}
+		//Kolla om vi har en återvändsgränd framåt, men eventuellt missar en vägg.
+		else if ((get_local_wall(0,1) & 0b0100) >> 2)
+ 660:	80 91 8e 00 	lds	r24, 0x008E
+ 664:	82 ff       	sbrs	r24, 2
+ 666:	09 c0       	rjmp	.+18     	; 0x67a <movement_direction+0x32>
+ 668:	02 c0       	rjmp	.+4      	; 0x66e <movement_direction+0x26>
+	}
+	//Om vi inte har en vägg till höger
+	else
+	{
+		//Kolla om det finns en vägg framör näsan
+		if ((get_local_wall(1,1) & 0b0100) >> 2)
+ 66a:	23 2b       	or	r18, r19
+ 66c:	11 f0       	breq	.+4      	; 0x672 <movement_direction+0x2a>
+		{
+			//IOM att vi vet att det inte finns en vägg till höger
+			//Har vi i det här läget en återvändsgränd där.
+
+			//Sväng vänster
+			movement_data[0] = 4;
+ 66e:	84 e0       	ldi	r24, 0x04	; 4
+ 670:	07 c0       	rjmp	.+14     	; 0x680 <movement_direction+0x38>
+
+		}
+		//Kolla om vi ser in i en återvändsgtränd till höger
+		else if ((get_local_wall(2,1) & 0b0100) >> 2)
+ 672:	80 91 94 00 	lds	r24, 0x0094
+ 676:	82 ff       	sbrs	r24, 2
+ 678:	02 c0       	rjmp	.+4      	; 0x67e <movement_direction+0x36>
+		{
+			//IOM att vi inte hade en vägg framför oss
+			
+			//Gå framåt
+			movement_data[0] = 2;
+ 67a:	82 e0       	ldi	r24, 0x02	; 2
+ 67c:	01 c0       	rjmp	.+2      	; 0x680 <movement_direction+0x38>
+		}
+		//Vi har hittat ett ytterhörn och skall svänga höger
+		else 
+		{
+			//Sväng höger
+			movement_data[0] = 5;
+ 67e:	85 e0       	ldi	r24, 0x05	; 5
+ 680:	80 93 87 00 	sts	0x0087, r24
+ 684:	08 95       	ret
+
+00000686 <_exit>:
+ 686:	f8 94       	cli
+
+00000688 <__stop_program>:
+ 688:	ff cf       	rjmp	.-2      	; 0x688 <__stop_program>
